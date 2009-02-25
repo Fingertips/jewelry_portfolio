@@ -36,12 +36,28 @@ module RepoPageSan
       "#{@account.pages_url}/raw/#{branch}/repos.yml"
     end
     
-    def get
-      @repos_yml ||= Net::HTTP.get(URI.parse(get_url))
+    def post_url
+      "#{@account.pages_url}/tree-save/#{branch}/repos.yml"
     end
     
     def repos
       @repos ||= YAML.load(get)
+    end
+    
+    def to_yaml
+      repos.to_yaml
+    end
+    
+    def get
+      @repos_yml ||= Net::HTTP.get(URI.parse(get_url))
+    end
+    
+    def post!
+      Net::HTTP.post_form(post_url,
+        'commit'  => branch,
+        'value'   => to_yaml,
+        'message' => 'commit message'
+      )
     end
   end
   
