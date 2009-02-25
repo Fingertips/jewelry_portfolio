@@ -36,6 +36,16 @@ describe "RepoPageSan::Page" do
       File.read(fixture('dr-nic-magic-awesome.html'))
   end
   
+  it "should render an ERB partial with the specified spec" do
+    @page.spec_partial(@specs.first).should ==
+      File.read(fixture('dr-nic-magic-awesome.html'))
+  end
+  
+  it "should render an ERB partial with the specified spec and local variables" do
+    File.stubs(:read).returns('<%= "#{spec} #{extra_var}" %>')
+    @page.spec_partial('spec_value', :extra_var => 'extra_var_value').should == 'spec_value extra_var_value'
+  end
+  
   it "should render the ERB template" do
     @page.render.should == File.read(fixture('template.html'))
   end

@@ -34,6 +34,10 @@ class RepoPageSan
     erb partial, PartialBinding.new(local_variables).binding
   end
   
+  def spec_partial(spec, local_variables = {})
+    partial 'spec', local_variables.merge(:spec => spec)
+  end
+  
   private
   
   def template_dir
