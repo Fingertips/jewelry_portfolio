@@ -8,14 +8,14 @@ class GemSpecMock
   end
 end
 
-describe "RepoPageSan::Page" do
+describe "RepoPageSan::Template" do
   before do
     @specs = [
       GemSpecMock.new('dr-nic-magic-awesome', 'Magically fix your projects overnight!'),
       GemSpecMock.new('microgem', 'Clean room implementation of the rubygems ‘install’ command.')
     ]
     
-    @page = RepoPageSan.new(fixture('template'), @specs)
+    @page = RepoPageSan::Template.new(fixture('template'), @specs)
   end
   
   it "should return the path to the template" do
