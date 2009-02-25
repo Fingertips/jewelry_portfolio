@@ -1,0 +1,5 @@
+<html>
+  <body>
+<%= specs.map { |spec| partial('spec', :spec => spec) }.join("\n") %>
+  </body>
+</html>
