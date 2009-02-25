@@ -17,7 +17,7 @@ describe "RepoPageSan::Page" do
   end
   
   it "should render the template file with the given object" do
-    @page.render(:title => 'Expected Template Output').should ==
+    @page.render(:title => 'Dr. Nic Magic Awesome').should ==
       File.read(fixture('expected_template_output.html'))
   end
 end
