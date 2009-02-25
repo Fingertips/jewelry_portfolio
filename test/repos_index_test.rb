@@ -22,4 +22,22 @@ describe "RepoPageSan::ReposIndex" do
     Net::HTTP.expects(:get).with(URI.parse(@index.get_url)).returns('repos.yml contents').once
     @index.get.should == 'repos.yml contents'
   end
+  
+  it "should be equal if the name matches" do
+    RepoPageSan::Repo.new(fixture('dr-nic-magic-awesome.gemspec_')).should ==
+      RepoPageSan::Repo.new(fixture('dr-nic-magic-awesome.gemspec_'))
+    
+    RepoPageSan::Repo.new(fixture('dr-nic-magic-awesome.gemspec_')).should.not ==
+      RepoPageSan::Repo.new(fixture('microgem.gemspec_'))
+  end
+  
+  it "should return an array of gemspecs, for each repo one" do
+    repos_yml = File.read(fixture('repos.yml'))
+    @index.stubs(:get).returns(repos_yml)
+    
+    @index.repos.should == [
+      RepoPageSan::Repo.new(fixture('dr-nic-magic-awesome.gemspec_')),
+      RepoPageSan::Repo.new(fixture('microgem.gemspec_'))
+    ]
+  end
 end

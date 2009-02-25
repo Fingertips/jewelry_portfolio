@@ -1,0 +1,15 @@
+Gem::Specification.new do |spec|
+  spec.name = 'dr-nic-magic-awesome'
+  spec.version = '1.0.0'
+  
+  spec.author = 'John Barnette'
+  spec.email = 'jbarnette@example.com'
+  
+  spec.description = spec.summary = %{ Magically fix your projects overnight! }
+  
+  spec.files = Dir['lib/**/*.rb', 'bin/*', '[A-Z]*', 'test/**/*']
+  
+  spec.has_rdoc = true
+  spec.extra_rdoc_files = %w{ README.rdoc LICENSE TODO }
+  spec.rdoc_options << '--charset=utf-8' << '--main' << 'README.rdoc'
+end

@@ -11,4 +11,8 @@ class Test::Unit::TestCase
   def fixture(file)
     File.join(FIXTURE_PATH, file)
   end
+  
+  def fixture_read(file)
+    File.read(fixture(file))
+  end
 end

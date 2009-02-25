@@ -1,6 +1,7 @@
 require 'erb'
 require 'net/http'
 require 'yaml'
+require 'rubygems/specification'
 
 module RepoPageSan
   class GitHubAccount
@@ -41,6 +42,38 @@ module RepoPageSan
     
     def repos
       @repos ||= YAML.load(get)
+    end
+  end
+  
+  class Repo
+    attr_reader :spec_path
+    
+    def initialize(spec_path)
+      @spec_path = spec_path
+    end
+    
+    def raw_spec
+      @raw_spec ||= File.read(@spec_path)
+    end
+    
+    def spec
+      @spec ||= eval(raw_spec)
+    end
+    
+    def ==(other)
+      other.is_a?(Repo) && spec.name == other.spec.name
+    end
+    
+    def yaml_initialize(tag, values) # :nodoc:
+      @raw_spec = values['spec']
+    end
+    
+    def to_yaml(options = {}) # :nodoc:
+      YAML.quick_emit(object_id, options) do |out|
+        out.map(taguri, to_yaml_style) do |map|
+          map.add 'spec', raw_spec
+        end
+      end
     end
   end
   
