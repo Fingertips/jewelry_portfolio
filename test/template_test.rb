@@ -50,6 +50,19 @@ describe "RepoPageSan::Template" do
     @page.spec_partial('spec_value', :extra_var => 'extra_var_value').should == 'spec_value extra_var_value'
   end
   
+  it "should render an ERB partial with nested partials" do
+    File.stubs(:read).with(File.join(FIXTURE_PATH, 'parent.html.erb')).
+      returns('Hello <%= partial "nested1", :text => "world!" %>')
+    
+    File.stubs(:read).with(File.join(FIXTURE_PATH, 'nested1.html.erb')).
+      returns('<%= text %> <%= partial "nested2", :text => "Wazzup?!" %>')
+    
+    File.stubs(:read).with(File.join(FIXTURE_PATH, 'nested2.html.erb')).
+      returns('<%= text %>')
+    
+    @page.partial('parent').should == 'Hello world! Wazzup?!'
+  end
+  
   it "should render the ERB template" do
     @page.render.should == File.read(fixture('template.html'))
   end

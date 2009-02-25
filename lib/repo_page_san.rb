@@ -26,7 +26,7 @@ module RepoPageSan
       erb @template, binding
     end
     
-    def partial(partial_name, local_variables)
+    def partial(partial_name, local_variables = {})
       for (var_name, var_value) in local_variables
         eval "#{var_name} = var_value"
       end
