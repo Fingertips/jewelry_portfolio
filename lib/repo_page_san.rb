@@ -1,6 +1,20 @@
 require 'erb'
 
-class RepoPageSan
+module RepoPageSan
+  class GitHubAccount
+    attr_reader :login, :token
+    
+    URL = 'https://github.com'
+    
+    def initialize(login, token)
+      @login, @token = login, token
+    end
+    
+    def base_url
+      File.join(URL, @login)
+    end
+  end
+  
   class Template
     attr_reader :template, :specs
     
