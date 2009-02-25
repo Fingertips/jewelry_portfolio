@@ -15,7 +15,7 @@ describe "RepoPageSan::Page" do
       GemSpecMock.new('microgem', 'Clean room implementation of the rubygems ‘install’ command.')
     ]
     
-    @page = RepoPageSan.new(fixture('template.html.erb'), @specs)
+    @page = RepoPageSan.new(fixture('template'), @specs)
   end
   
   it "should return the path to the template" do
@@ -24,6 +24,10 @@ describe "RepoPageSan::Page" do
   
   it "should return the specs" do
     @page.specs.should == @specs
+  end
+  
+  it "should return the view_path" do
+    @page.view_path.should == FIXTURE_PATH
   end
   
   it "should render with the specified gem specs available as `specs'" do

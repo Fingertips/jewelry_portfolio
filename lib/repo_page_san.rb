@@ -22,7 +22,7 @@ class RepoPageSan
   attr_reader :template, :specs
   
   def initialize(template, specs)
-    @template, @specs = template, specs
+    @template, @specs = "#{template}.html.erb", specs
   end
   
   def render
@@ -30,7 +30,7 @@ class RepoPageSan
   end
   
   def partial(name, local_variables)
-    partial = File.join(template_dir, "#{name}.html.erb")
+    partial = File.join(view_path, "#{name}.html.erb")
     erb partial, PartialBinding.new(local_variables).binding
   end
   
@@ -38,11 +38,11 @@ class RepoPageSan
     partial 'spec', local_variables.merge(:spec => spec)
   end
   
-  private
-  
-  def template_dir
-    File.dirname(@template)
+  def view_path
+    @view_path ||= File.dirname(File.expand_path(@template))
   end
+  
+  private
   
   def erb(file, binding)
     ERB.new(File.read(file)).result(binding)
