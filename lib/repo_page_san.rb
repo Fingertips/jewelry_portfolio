@@ -1,4 +1,6 @@
 require 'erb'
+require 'net/http'
+require 'yaml'
 
 module RepoPageSan
   class GitHubAccount
@@ -18,18 +20,27 @@ module RepoPageSan
   class ReposIndex
     attr_reader :account
     
-    BRANCH = 'gh-pages'
-    
     def initialize(account)
       @account = account
     end
+    
+    BRANCH = 'gh-pages'
+    def branch; BRANCH end
     
     def url
       "#{@account.pages_url}/blob/#{branch}/repos.yml"
     end
     
-    def branch
-      BRANCH
+    def get_url
+      "#{@account.pages_url}/raw/#{branch}/repos.yml"
+    end
+    
+    def get
+      @repos_yml ||= Net::HTTP.get(URI.parse(get_url))
+    end
+    
+    def repos
+      @repos ||= YAML.load(get)
     end
   end
   

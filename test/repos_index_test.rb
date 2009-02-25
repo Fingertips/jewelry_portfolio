@@ -10,7 +10,16 @@ describe "RepoPageSan::ReposIndex" do
     @index.account.should == @account
   end
   
-  it "should return the url to the repos index" do
+  it "should return the url to the repos index yaml file" do
     @index.url.should == "#{@account.pages_url}/blob/gh-pages/repos.yml"
+  end
+  
+  it "should return the url to the repos index yaml file for a GET request" do
+    @index.get_url.should == "#{@account.pages_url}/raw/gh-pages/repos.yml"
+  end
+  
+  it "should return the repos index yaml file contents" do
+    Net::HTTP.expects(:get).with(URI.parse(@index.get_url)).returns('repos.yml contents').once
+    @index.get.should == 'repos.yml contents'
   end
 end
