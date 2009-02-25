@@ -4,14 +4,32 @@ module RepoPageSan
   class GitHubAccount
     attr_reader :login, :token
     
-    URL = 'https://github.com'
+    PAGE_URL = 'https://github.com/%s/%s.github.com'
     
     def initialize(login, token)
       @login, @token = login, token
     end
     
-    def base_url
-      File.join(URL, @login)
+    def pages_url
+      PAGE_URL % [@login, @login]
+    end
+  end
+  
+  class ReposIndex
+    attr_reader :account
+    
+    BRANCH = 'gh-pages'
+    
+    def initialize(account)
+      @account = account
+    end
+    
+    def url
+      "#{@account.pages_url}/blob/#{branch}/repos.yml"
+    end
+    
+    def branch
+      BRANCH
     end
   end
   

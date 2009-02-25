@@ -10,7 +10,7 @@ describe "RepoPageSan::GitHubAccount" do
     @account.token.should == 'the_token'
   end
   
-  it "should return the base URL for this account" do
-    @account.base_url.should == 'https://github.com/alloy'
+  it "should return the URL to the `pages' repo for this account" do
+    @account.pages_url.should == 'https://github.com/alloy/alloy.github.com'
   end
 end
