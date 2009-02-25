@@ -1,7 +1,11 @@
-require File.dirname(__FILE__) + '/test_helper'
+require File.expand_path('../test_helper', __FILE__)
 
-class RepoPageSanTest < Test::Unit::TestCase
-  should "probably rename this file and start testing for real" do
-    flunk "hey buddy, you should probably rename this file and start testing for real"
+describe "RepoPageSan::Page" do
+  before do
+    @page = RepoPageSan::Page.new(fixture('template.html.erb'))
+  end
+  
+  it "should return the path to the template" do
+    @page.template.should == fixture('template.html.erb')
   end
 end

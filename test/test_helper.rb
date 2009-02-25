@@ -1,10 +1,14 @@
 require 'rubygems'
-require 'test/unit'
-require 'shoulda'
+require 'test/spec'
 require 'mocha'
 
-$LOAD_PATH.unshift(File.dirname(__FILE__))
+$:.unshift File.expand_path('../../lib', __FILE__)
 require 'repo_page_san'
 
+FIXTURE_PATH = File.expand_path('../fixtures', __FILE__)
+
 class Test::Unit::TestCase
+  def fixture(file)
+    File.join(FIXTURE_PATH, file)
+  end
 end
