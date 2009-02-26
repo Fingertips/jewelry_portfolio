@@ -40,8 +40,12 @@ module RepoPageSan
       @pages_repo
     end
     
+    def repos_file
+      File.join(path, 'repos.yml')
+    end
+    
     def repos
-      #@repos ||= YAML.load(get)
+      @repos ||= YAML.load(File.read(repos_file))
     end
     
     def to_yaml

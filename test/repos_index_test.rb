@@ -17,23 +17,8 @@ describe "RepoPageSan::ReposIndex. in general" do
     @index.path.should == File.join(Dir.tmpdir, 'alloy.github.com.git')
   end
   
-  it "should be equal if the name matches" do
-    RepoPageSan::Repo.new(fixture('dr-nic-magic-awesome.gemspec_')).should ==
-      RepoPageSan::Repo.new(fixture('dr-nic-magic-awesome.gemspec_'))
-    
-    RepoPageSan::Repo.new(fixture('dr-nic-magic-awesome.gemspec_')).should.not ==
-      RepoPageSan::Repo.new(fixture('microgem.gemspec_'))
-  end
-  
-  xit "should return an array of repos with their gemspecs" do
-    @index.repos.should == [
-      RepoPageSan::Repo.new(fixture('dr-nic-magic-awesome.gemspec_')),
-      RepoPageSan::Repo.new(fixture('microgem.gemspec_'))
-    ]
-  end
-  
-  xit "should serialize the array of repos as YAML" do
-    @index.to_yaml.should == fixture_read('repos.yml')
+  it "should return the path to the repos YAML index file" do
+    @index.repos_file.should == File.join(@index.path, 'repos.yml')
   end
 end
 
@@ -63,5 +48,16 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
   it "should return the pages repo" do
     repo = @index.pages_repo
     repo.should.be.instance_of Git::Base
+  end
+  
+  it "should return an array of repos with their gemspecs" do
+    @index.repos.should == [
+      RepoPageSan::Repo.new(fixture('dr-nic-magic-awesome.gemspec_')),
+      RepoPageSan::Repo.new(fixture('microgem.gemspec_'))
+    ]
+  end
+  
+  it "should serialize the array of repos as YAML" do
+    @index.to_yaml.should == fixture_read('repos.yml')
   end
 end
