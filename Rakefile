@@ -1,4 +1,6 @@
 require 'rake'
+require 'rake/testtask'
+require 'rake/rdoctask'
 
 begin
   require 'jeweler'
@@ -14,7 +16,6 @@ rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
 
-require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = 'repo_page_san'
@@ -23,7 +24,6 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-require 'rake/testtask'
 Rake::TestTask.new(:test) do |t|
   t.libs << 'lib' << 'test'
   t.pattern = 'test/*_test.rb'
@@ -31,3 +31,13 @@ Rake::TestTask.new(:test) do |t|
 end
 
 task :default => :test
+
+desc "Generates the gzipped tarball of the alloy.github.com repo fixture"
+task :generate_repo_fixture_archive do
+  fixtures = File.expand_path('../test/fixtures', __FILE__)
+  repo = 'alloy.github.com'
+  archive = "#{repo}.tgz"
+  
+  rm_rf File.join(fixtures, archive)
+  sh "cd '#{fixtures}' && tar czf #{archive} #{repo}"
+end
