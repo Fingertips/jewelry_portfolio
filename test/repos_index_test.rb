@@ -52,6 +52,11 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
     @index.pages_repo
   end
   
+  it "should create and checkout the `gh-pages' branch" do
+    FileUtils.rm_rf(TMP_PAGES_REPO)
+    @index.pages_repo.branch('gh-pages').should.be.current
+  end
+  
   it "should return the pages repo" do
     repo = @index.pages_repo
     repo.should.be.instance_of Git::Base

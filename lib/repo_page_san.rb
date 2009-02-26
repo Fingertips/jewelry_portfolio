@@ -28,9 +28,6 @@ class RepoPageSan
       @account = account
     end
     
-    BRANCH = 'gh-pages'
-    def branch; BRANCH end
-    
     def url
       "git://github.com/#{@account}/#{repo_name}"
     end
@@ -44,14 +41,7 @@ class RepoPageSan
     end
     
     def pages_repo
-      unless @pages_repo
-        if File.exist?(path)
-          @pages_repo = Git.open(path)
-        else
-          puts "Cloning `#{url}'"
-          @pages_repo = Git.clone(url, repo_name, :path => File.dirname(path))
-        end
-      end
+      load_pages_repo!
       @pages_repo
     end
     
@@ -61,7 +51,7 @@ class RepoPageSan
     
     def repos
       unless @repos
-        pages_repo
+        load_pages_repo!
         @repos = YAML.load(File.read(repos_file))
       end
       @repos
@@ -69,6 +59,24 @@ class RepoPageSan
     
     def to_yaml
       repos.to_yaml
+    end
+    
+    private
+    
+    def load_pages_repo!
+      unless @pages_repo
+        if File.exist?(path)
+          @pages_repo = Git.open(path)
+          @pages_repo.checkout('gh-pages')
+        else
+          puts "Cloning `#{url}'"
+          @pages_repo = Git.clone(url, repo_name, :path => File.dirname(path))
+          @pages_repo.checkout('origin/gh-pages')
+          branch = @pages_repo.branch('gh-pages')
+          branch.create
+          branch.checkout
+        end
+      end
     end
   end
   
