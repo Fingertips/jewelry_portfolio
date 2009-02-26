@@ -17,6 +17,10 @@ class RepoPageSan
     File.open(File.join(@index.path, 'index.html'), 'w') { |f| f << @template.render }
   end
   
+  def commit!
+    @index.pages_repo.commit_all('Updated index.html')
+  end
+  
   class ReposIndex
     attr_reader :account
     
