@@ -1,11 +1,17 @@
 require 'erb'
 require 'git'
-require 'net/http'
 require 'rubygems/specification'
 require 'tempfile'
 require 'yaml'
 
-module RepoPageSan
+class RepoPageSan
+  attr_reader :account, :index
+  
+  def initialize(account)
+    @account = account
+    @index = ReposIndex.new(@account)
+  end
+  
   class ReposIndex
     attr_reader :account
     
