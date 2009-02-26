@@ -11,8 +11,8 @@ end
 describe "RepoPageSan::Template" do
   before do
     @specs = [
-      GemSpecMock.new('dr-nic-magic-awesome', 'Magically fix your projects overnight!'),
-      GemSpecMock.new('microgem', 'Clean room implementation of the rubygems ‘install’ command.')
+      GemSpecMock.new('dr-nic-magic-awesome', "Magically fix your projects overnight!"),
+      GemSpecMock.new('microgem', "MicroGem provides a simple naive replacement for the `gem install' command in the form of the `mgem' commandline utility.")
     ]
     
     @page = RepoPageSan::Template.new(fixture('template'), @specs)

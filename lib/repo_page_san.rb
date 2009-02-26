@@ -8,9 +8,13 @@ class RepoPageSan
   attr_reader :account, :index, :template
   
   def initialize(account)
-    @account = account
-    @index = ReposIndex.new(@account)
-    @template = Template.new(File.join(@index.path, 'template'), @index.repos)
+    @account  = account
+    @index    = ReposIndex.new(@account)
+    @template = Template.new(File.join(@index.path, 'template'), @index.repos.map { |r| r.spec })
+  end
+  
+  def render!
+    File.open(File.join(@index.path, 'index.html'), 'w') { |f| f << @template.render }
   end
   
   class ReposIndex

@@ -4,6 +4,8 @@ describe "RepoPageSan" do
   before do
     RepoPageSan::ReposIndex.any_instance.stubs(:url).returns(fixture('alloy.github.com'))
     RepoPageSan::ReposIndex.any_instance.stubs(:path).returns(TMP_PAGES_REPO)
+    RepoPageSan::ReposIndex.any_instance.stubs(:puts)
+    FileUtils.rm_rf(TMP_PAGES_REPO)
     
     @instance = RepoPageSan.new('alloy')
   end
@@ -18,5 +20,11 @@ describe "RepoPageSan" do
     template = @instance.template
     template.should.be.instance_of RepoPageSan::Template
     template.template.should == File.join(@instance.index.path, 'template.html.erb')
+    template.specs.should == @instance.index.repos.map { |r| r.spec }
+  end
+  
+  it "should write out the template" do
+    @instance.render!
+    File.read(File.join(@instance.index.path, 'index.html')).should == File.read(fixture('template.html'))
   end
 end
