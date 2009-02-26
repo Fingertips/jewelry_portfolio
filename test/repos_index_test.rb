@@ -38,6 +38,13 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
     File.should.exist File.join(TMP_PAGES_REPO, 'repos.yml')
   end
   
+  it "should create a checkout of the pages repo if it doesn't exist when asking for the repos" do
+    FileUtils.rm_rf(TMP_PAGES_REPO)
+    
+    @index.repos
+    File.should.exist File.join(TMP_PAGES_REPO, 'repos.yml')
+  end
+  
   it "should not create a new checkout if it already exists" do
     @index.pages_repo # make sure it exists
     

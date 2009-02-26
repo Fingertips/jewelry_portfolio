@@ -13,4 +13,10 @@ describe "RepoPageSan" do
     index.should.be.instance_of RepoPageSan::ReposIndex
     index.repos.map { |r| r.spec.name }.should == %w{ dr-nic-magic-awesome microgem }
   end
+  
+  it "should return the template" do
+    template = @instance.template
+    template.should.be.instance_of RepoPageSan::Template
+    template.template.should == File.join(@instance.index.path, 'template.html.erb')
+  end
 end

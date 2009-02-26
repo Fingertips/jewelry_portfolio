@@ -5,11 +5,12 @@ require 'tempfile'
 require 'yaml'
 
 class RepoPageSan
-  attr_reader :account, :index
+  attr_reader :account, :index, :template
   
   def initialize(account)
     @account = account
     @index = ReposIndex.new(@account)
+    @template = Template.new(File.join(@index.path, 'template'), @index.repos)
   end
   
   class ReposIndex
@@ -51,7 +52,11 @@ class RepoPageSan
     end
     
     def repos
-      @repos ||= YAML.load(File.read(repos_file))
+      unless @repos
+        pages_repo
+        @repos = YAML.load(File.read(repos_file))
+      end
+      @repos
     end
     
     def to_yaml
