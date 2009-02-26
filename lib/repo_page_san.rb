@@ -1,23 +1,11 @@
 require 'erb'
+require 'git'
 require 'net/http'
-require 'yaml'
 require 'rubygems/specification'
+require 'tempfile'
+require 'yaml'
 
 module RepoPageSan
-  class GitHubAccount
-    attr_reader :login, :token
-    
-    PAGE_URL = 'https://github.com/%s/%s.github.com'
-    
-    def initialize(login, token)
-      @login, @token = login, token
-    end
-    
-    def pages_url
-      PAGE_URL % [@login, @login]
-    end
-  end
-  
   class ReposIndex
     attr_reader :account
     
@@ -29,35 +17,35 @@ module RepoPageSan
     def branch; BRANCH end
     
     def url
-      "#{@account.pages_url}/blob/#{branch}/repos.yml"
+      "git://github.com/#{@account}/#{repo_name}"
     end
     
-    def get_url
-      "#{@account.pages_url}/raw/#{branch}/repos.yml"
+    def path
+      File.join(Dir.tmpdir, repo_name)
     end
     
-    def post_url
-      "#{@account.pages_url}/tree-save/#{branch}/repos.yml"
+    def repo_name
+      "#{@account}.github.com.git"
+    end
+    
+    def pages_repo
+      unless @pages_repo
+        if File.exist?(path)
+          @pages_repo = Git.open(path)
+        else
+          puts "Cloning `#{url}'"
+          @pages_repo = Git.clone(url, repo_name, :path => File.dirname(path))
+        end
+      end
+      @pages_repo
     end
     
     def repos
-      @repos ||= YAML.load(get)
+      #@repos ||= YAML.load(get)
     end
     
     def to_yaml
       repos.to_yaml
-    end
-    
-    def get
-      @repos_yml ||= Net::HTTP.get(URI.parse(get_url))
-    end
-    
-    def post!
-      Net::HTTP.post_form(post_url,
-        'commit'  => branch,
-        'value'   => to_yaml,
-        'message' => 'commit message'
-      )
     end
   end
   

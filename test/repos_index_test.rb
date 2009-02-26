@@ -1,26 +1,20 @@
 require File.expand_path('../test_helper', __FILE__)
 
-describe "RepoPageSan::ReposIndex, in general" do
+describe "RepoPageSan::ReposIndex. in general" do
   before do
-    @account = RepoPageSan::GitHubAccount.new('alloy', 'the_token')
-    @index = RepoPageSan::ReposIndex.new(@account)
-    @index.stubs(:get).returns(fixture_read('repos.yml'))
+    @index = RepoPageSan::ReposIndex.new('alloy')
   end
   
-  it "should return the account instance" do
-    @index.account.should == @account
+  it "should return the account" do
+    @index.account.should == 'alloy'
   end
   
-  it "should return the url to the repos index yaml file" do
-    @index.url.should == "#{@account.pages_url}/blob/gh-pages/repos.yml"
+  it "should return the url to the pages repo" do
+    @index.url.should == "git://github.com/alloy/alloy.github.com.git"
   end
   
-  it "should return the url to the repos index yaml file for a GET request" do
-    @index.get_url.should == "#{@account.pages_url}/raw/gh-pages/repos.yml"
-  end
-  
-  it "should return the url to the repos index yaml file for a POST request" do
-    @index.post_url.should == "#{@account.pages_url}/tree-save/gh-pages/repos.yml"
+  it "should return the path to the tmp checkout of the pages repo" do
+    @index.path.should == File.join(Dir.tmpdir, 'alloy.github.com.git')
   end
   
   it "should be equal if the name matches" do
@@ -31,36 +25,43 @@ describe "RepoPageSan::ReposIndex, in general" do
       RepoPageSan::Repo.new(fixture('microgem.gemspec_'))
   end
   
-  it "should return an array of repos with their gemspecs" do
+  xit "should return an array of repos with their gemspecs" do
     @index.repos.should == [
       RepoPageSan::Repo.new(fixture('dr-nic-magic-awesome.gemspec_')),
       RepoPageSan::Repo.new(fixture('microgem.gemspec_'))
     ]
   end
   
-  it "should serialize the array of repos as YAML" do
+  xit "should serialize the array of repos as YAML" do
     @index.to_yaml.should == fixture_read('repos.yml')
   end
 end
 
-describe "RepoPageSan::ReposIndex, when making a connection" do
+describe "RepoPageSan::ReposIndex, when working with a pages repo" do
   before do
-    @account = RepoPageSan::GitHubAccount.new('alloy', 'the_token')
-    @index = RepoPageSan::ReposIndex.new(@account)
-  end
-  
-  it "should return the repos index yaml file contents" do
-    Net::HTTP.expects(:get).with(URI.parse(@index.get_url)).returns('repos.yml contents').once
-    @index.get.should == 'repos.yml contents'
-  end
-  
-  it "should post the repos index yaml file to the remote branch" do
-    Net::HTTP.expects(:post_form).with(@index.post_url,
-      'commit'  => 'gh-pages',
-      'value'   => @index.to_yaml,
-      'message' => 'commit message'
-    )
+    @index = RepoPageSan::ReposIndex.new('alloy')
+    @index.stubs(:url).returns(fixture('alloy.github.com'))
+    @index.stubs(:path).returns(TMP_PAGES_REPO)
     
-    @index.post!
+    @index.stubs(:puts)
+  end
+  
+  it "should create a checkout of the pages repo if it doesn't exist yet and return it" do
+    FileUtils.rm_rf(TMP_PAGES_REPO)
+    
+    @index.pages_repo.should.be.instance_of Git::Base
+    File.should.exist File.join(TMP_PAGES_REPO, 'repos.yml')
+  end
+  
+  it "should not create a new checkout if it already exists" do
+    @index.pages_repo # make sure it exists
+    
+    Git.expects(:clone).never
+    @index.pages_repo
+  end
+  
+  it "should return the pages repo" do
+    repo = @index.pages_repo
+    repo.should.be.instance_of Git::Base
   end
 end
