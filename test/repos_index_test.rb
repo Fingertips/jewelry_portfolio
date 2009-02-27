@@ -62,6 +62,13 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
     repo.should.be.instance_of Git::Base
   end
   
+  it "should return an array of specs" do
+    FileUtils.rm_rf(TMP_PAGES_REPO)
+    
+    @index.specs.each { |s| s.should.be.instance_of Gem::Specification }
+    @index.specs.map { |s| s.name }.should == %w{ dr-nic-magic-awesome microgem }
+  end
+  
   it "should return an array of repos with their gemspecs" do
     @index.repos.should == [
       RepoPageSan::Repo.new(fixture_eval('dr-nic-magic-awesome.gemspec_')),
@@ -101,8 +108,8 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
     @index.repos # make sure its loaded
     
-    spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_'))
-    spec.stubs(:name).returns('dr-nic-magic-awesome-v2')
+    spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_').
+      gsub('dr-nic-magic-awesome', 'dr-nic-magic-awesome-v2'))
     
     assert_difference('repos_from_file.length', +1) do
       @index.add(spec)
@@ -121,7 +128,7 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
       @index.add(spec)
     end
     
-    repos_from_file.first.spec.version.to_s.should == '1.1.1'
+    repos_from_file.first.version.to_s.should == '1.1.1'
   end
   
   private

@@ -11,7 +11,7 @@ class RepoPageSan
     @account  = account
     @spec     = spec
     @index    = ReposIndex.new(@account)
-    @template = Template.new(File.join(@index.path, 'template'), @index.repos.map { |r| r.spec })
+    @template = Template.new(File.join(@index.path, 'template'), @index.specs)
   end
   
   def render!
@@ -52,19 +52,23 @@ class RepoPageSan
       File.join(path, 'repos.yml')
     end
     
-    def repos
-      unless @repos
+    def specs
+      unless @specs
         load_pages_repo!
-        @repos = YAML.load(File.read(repos_file))
+        @specs = YAML.load(File.read(repos_file))
       end
-      @repos
+      @specs
+    end
+    
+    def repos
+      specs.map { |spec| Repo.new(spec) }
     end
     
     def add(spec)
-      if repo = repos.find { |r| r.name == spec.name }
-        repo.spec = spec
+      if old_spec = specs.find { |s| s.name == spec.name }
+        specs[specs.index(old_spec)] = spec
       else
-        repos << Repo.new(spec)
+        specs << spec
       end
       update_repos_file!
     end
@@ -79,7 +83,7 @@ class RepoPageSan
     end
     
     def to_yaml
-      repos.to_yaml
+      specs.to_yaml
     end
     
     private
@@ -118,18 +122,6 @@ class RepoPageSan
     
     def ==(other)
       other.is_a?(Repo) && name == other.name
-    end
-    
-    def yaml_initialize(tag, values) # :nodoc:
-      @spec = eval(values['spec'])
-    end
-    
-    def to_yaml(options = {}) # :nodoc:
-      YAML.quick_emit(object_id, options) do |out|
-        out.map(taguri, to_yaml_style) do |map|
-          map.add 'spec', @spec.to_ruby
-        end
-      end
     end
   end
   
