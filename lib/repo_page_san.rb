@@ -17,8 +17,10 @@ class RepoPageSan
     File.open(File.join(@index.path, 'index.html'), 'w') { |f| f << @template.render }
   end
   
-  def commit!
-    @index.pages_repo.commit_all('Updated index.html')
+  def release!
+    render!
+    @index.commit! 'Updated index.html'
+    @index.push!
   end
   
   class ReposIndex
@@ -55,6 +57,14 @@ class RepoPageSan
         @repos = YAML.load(File.read(repos_file))
       end
       @repos
+    end
+    
+    def commit!(message)
+      pages_repo.commit_all(message)
+    end
+    
+    def push!
+      pages_repo.push('origin', 'gh-pages')
     end
     
     def to_yaml

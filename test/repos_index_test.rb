@@ -72,4 +72,29 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
   it "should serialize the array of repos as YAML" do
     @index.to_yaml.should == fixture_read('repos.yml')
   end
+  
+  it "should push the `gh-pages' branch" do
+    @index.pages_repo.expects(:push).with('origin', 'gh-pages')
+    @index.push!
+  end
+  
+  it "should commit the changes to the pages repo" do
+    assert_difference('@index.pages_repo.log.size', +1) do
+      File.open(@index.repos_file, 'w') { |f| f << '' }
+      @index.commit!('test commit')
+    end
+  end
+  
+  it "should push the `gh-pages' branch" do
+    @index.pages_repo.expects(:push).with('origin', 'gh-pages')
+    @index.push!
+  end
+  
+  private
+  
+  def assert_difference(eval_str, diff)
+    before = eval(eval_str)
+    yield
+    assert_equal before + diff, eval(eval_str)
+  end
 end

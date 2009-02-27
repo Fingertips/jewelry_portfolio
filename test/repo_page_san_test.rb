@@ -28,18 +28,11 @@ describe "RepoPageSan" do
     File.read(File.join(@instance.index.path, 'index.html')).should == File.read(fixture('template.html'))
   end
   
-  it "should commit the changes to the pages repo" do
-    assert_difference('@instance.index.pages_repo.log.size', +1) do
-      @instance.render!
-      @instance.commit!
-    end
-  end
-  
-  private
-  
-  def assert_difference(eval_str, diff)
-    before = eval(eval_str)
-    yield
-    assert_equal before + diff, eval(eval_str)
+  it "should render, commit, and push the `gh-pages' branch" do
+    @instance.expects(:render!)
+    @instance.index.expects(:commit!).with('Updated index.html')
+    @instance.index.expects(:push!)
+    
+    @instance.release!
   end
 end
