@@ -9,6 +9,8 @@ describe "RepoPageSan" do
     
     @spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_'))
     @instance = RepoPageSan.new('alloy', @spec)
+    
+    @instance.stubs(:puts)
   end
   
   it "should add the spec to the index" do

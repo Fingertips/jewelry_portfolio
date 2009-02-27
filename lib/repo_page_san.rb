@@ -19,6 +19,7 @@ class RepoPageSan
   end
   
   def render!
+    puts "Generating html"
     File.open(File.join(@index.path, 'index.html'), 'w') { |f| f << @template.render }
   end
   
