@@ -7,7 +7,8 @@ describe "RepoPageSan" do
     RepoPageSan::ReposIndex.any_instance.stubs(:puts)
     FileUtils.rm_rf(TMP_PAGES_REPO)
     
-    @instance = RepoPageSan.new('alloy')
+    @spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_'))
+    @instance = RepoPageSan.new('alloy', @spec)
   end
   
   it "should return the local pages repos index" do
@@ -30,7 +31,7 @@ describe "RepoPageSan" do
   
   it "should render, commit, and push the `gh-pages' branch" do
     @instance.expects(:render!)
-    @instance.index.expects(:commit!).with('Updated index.html')
+    @instance.index.expects(:commit!).with("Updated github pages for `dr-nic-magic-awesome 1.0.0'")
     @instance.index.expects(:push!)
     
     @instance.release!

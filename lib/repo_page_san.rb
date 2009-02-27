@@ -5,10 +5,11 @@ require 'tempfile'
 require 'yaml'
 
 class RepoPageSan
-  attr_reader :account, :index, :template
+  attr_reader :account, :spec, :index, :template
   
-  def initialize(account)
+  def initialize(account, spec)
     @account  = account
+    @spec     = spec
     @index    = ReposIndex.new(@account)
     @template = Template.new(File.join(@index.path, 'template'), @index.repos.map { |r| r.spec })
   end
@@ -19,7 +20,7 @@ class RepoPageSan
   
   def release!
     render!
-    @index.commit! 'Updated index.html'
+    @index.commit! "Updated github pages for `#{@spec.name} #{@spec.version}'"
     @index.push!
   end
   
