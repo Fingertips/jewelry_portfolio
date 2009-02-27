@@ -18,6 +18,17 @@ describe "RepoPageSan::Template" do
     @page = RepoPageSan::Template.new(fixture('template'), @specs)
   end
   
+  it "should raise a RepoPageSan::FileMissingError if the specified template does not exist" do
+    e = nil
+    begin
+      RepoPageSan::Template.new('/not/existing/template', @specs)
+    rescue RepoPageSan::FileMissingError => e
+    end
+    
+    e.should.be.instance_of RepoPageSan::FileMissingError
+    e.message.should == "Could not find template at path `/not/existing/template.html.erb'"
+  end
+  
   it "should return the path to the template" do
     @page.template.should == fixture('template.html.erb')
   end

@@ -5,6 +5,8 @@ require 'tempfile'
 require 'yaml'
 
 class RepoPageSan
+  class FileMissingError < StandardError; end
+  
   attr_reader :account, :spec, :index, :template
   
   def initialize(account, spec)
@@ -131,6 +133,7 @@ class RepoPageSan
     
     def initialize(template, specs)
       @template, @specs = html_template_filename(template), specs
+      raise FileMissingError, "Could not find template at path `#{@template}'" unless File.exist?(@template)
     end
     
     def render
