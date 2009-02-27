@@ -22,4 +22,8 @@ class Test::Unit::TestCase
   def fixture_read(file)
     File.read(fixture(file))
   end
+  
+  def fixture_eval(name)
+    eval(fixture_read(name))
+  end
 end

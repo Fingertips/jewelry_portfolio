@@ -60,6 +60,15 @@ class RepoPageSan
       @repos
     end
     
+    def add(spec)
+      if repo = repos.find { |r| r.name == spec.name }
+        repo.spec = spec
+      else
+        repos << Repo.new(spec)
+      end
+      update_repos_file!
+    end
+    
     def commit!(message)
       pages_repo.add
       pages_repo.commit(message)
@@ -74,6 +83,10 @@ class RepoPageSan
     end
     
     private
+    
+    def update_repos_file!
+      File.open(repos_file, 'w') { |f| f << to_yaml }
+    end
     
     def load_pages_repo!
       unless @pages_repo
@@ -93,32 +106,28 @@ class RepoPageSan
   end
   
   class Repo
-    attr_reader :spec_path
+    attr_accessor :spec
     
-    def initialize(spec_path)
-      @spec_path = spec_path
+    def initialize(spec)
+      @spec = spec
     end
     
-    def raw_spec
-      @raw_spec ||= File.read(@spec_path)
-    end
-    
-    def spec
-      @spec ||= eval(raw_spec)
+    def name
+      @spec.name
     end
     
     def ==(other)
-      other.is_a?(Repo) && spec.name == other.spec.name
+      other.is_a?(Repo) && name == other.name
     end
     
     def yaml_initialize(tag, values) # :nodoc:
-      @raw_spec = values['spec']
+      @spec = eval(values['spec'])
     end
     
     def to_yaml(options = {}) # :nodoc:
       YAML.quick_emit(object_id, options) do |out|
         out.map(taguri, to_yaml_style) do |map|
-          map.add 'spec', raw_spec
+          map.add 'spec', @spec.to_ruby
         end
       end
     end

@@ -64,12 +64,12 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
   
   it "should return an array of repos with their gemspecs" do
     @index.repos.should == [
-      RepoPageSan::Repo.new(fixture('dr-nic-magic-awesome.gemspec_')),
-      RepoPageSan::Repo.new(fixture('microgem.gemspec_'))
+      RepoPageSan::Repo.new(fixture_eval('dr-nic-magic-awesome.gemspec_')),
+      RepoPageSan::Repo.new(fixture_eval('microgem.gemspec_'))
     ]
   end
   
-  it "should serialize the array of repos as YAML" do
+  xit "should serialize the array of repos as YAML" do
     @index.to_yaml.should == fixture_read('repos.yml')
   end
   
@@ -79,14 +79,14 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
   end
   
   it "should commit the changes to the pages repo" do
-    assert_difference('@index.pages_repo.log.size', +1) do
+    assert_difference('pages_repo_commits', +1) do
       File.open(@index.repos_file, 'w') { |f| f << 'foo' }
       @index.commit!('test commit')
     end
   end
   
   it "should also commit new files to the pages repo" do
-    assert_difference('@index.pages_repo.log.size', +1) do
+    assert_difference('pages_repo_commits', +1) do
       File.open(File.join(@index.path, 'foo'), 'w') { |f| f << 'foo' }
       @index.commit!('test commit')
     end
@@ -97,11 +97,50 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
     @index.push!
   end
   
+  it "should add a new spec to the repos.yml" do
+    FileUtils.rm_rf(TMP_PAGES_REPO)
+    @index.repos # make sure its loaded
+    
+    spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_'))
+    spec.stubs(:name).returns('dr-nic-magic-awesome-v2')
+    
+    assert_difference('repos_from_file.length', +1) do
+      @index.add(spec)
+    end
+    
+    repos_from_file.last.name.should == 'dr-nic-magic-awesome-v2'
+  end
+  
+  it "should update an existing spec in the repos.yml" do
+    FileUtils.rm_rf(TMP_PAGES_REPO)
+    @index.repos # make sure its loaded
+    
+    spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_').gsub('1.0.0', '1.1.1'))
+    
+    assert_no_difference('repos_from_file.length') do
+      @index.add(spec)
+    end
+    
+    repos_from_file.first.spec.version.to_s.should == '1.1.1'
+  end
+  
   private
+  
+  def repos_from_file
+    YAML.load(File.read(@index.repos_file))
+  end
+  
+  def pages_repo_commits
+    @index.pages_repo.log.size
+  end
   
   def assert_difference(eval_str, diff)
     before = eval(eval_str)
     yield
     assert_equal before + diff, eval(eval_str)
+  end
+  
+  def assert_no_difference(eval_str, &block)
+    assert_difference(eval_str, 0, &block)
   end
 end
