@@ -129,11 +129,13 @@ class RepoPageSan
   end
   
   class Template
-    attr_reader :template, :specs
+    attr_reader :template, :specs, :view_path
     
     def initialize(template, specs)
-      @template, @specs = html_template_filename(template), specs
-      raise FileMissingError, "Could not find template at path `#{@template}'" unless File.exist?(@template)
+      template   = File.expand_path(template)
+      @view_path = File.dirname(template)
+      @template  = html_template_file(File.basename(template))
+      @specs     = specs
     end
     
     def render
@@ -151,22 +153,16 @@ class RepoPageSan
       partial 'spec', local_variables.merge(:spec => spec)
     end
     
-    def view_path
-      @view_path ||= File.dirname(File.expand_path(@template))
-    end
-    
     private
     
     def erb(file, binding)
       ERB.new(File.read(file)).result(binding)
     end
     
-    def html_template_filename(name)
-      "#{name}.html.erb"
-    end
-    
     def html_template_file(name)
-      File.join(view_path, html_template_filename(name))
+      path = File.join(view_path, "#{name}.html.erb")
+      raise FileMissingError, "Could not find template at path `#{path}'" unless File.exist?(path)
+      path
     end
   end
 end

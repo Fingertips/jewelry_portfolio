@@ -62,19 +62,22 @@ describe "RepoPageSan::Template" do
   end
   
   it "should render an ERB partial with nested partials" do
-    File.stubs(:read).with(File.join(FIXTURE_PATH, 'parent.html.erb')).
-      returns('Hello <%= partial "nested1", :text => "world!" %>')
-    
-    File.stubs(:read).with(File.join(FIXTURE_PATH, 'nested1.html.erb')).
-      returns('<%= text %> <%= partial "nested2", :text => "Wazzup?!" %>')
-    
-    File.stubs(:read).with(File.join(FIXTURE_PATH, 'nested2.html.erb')).
-      returns('<%= text %>')
+    stubs_file_exists_and_returns('parent.html.erb', 'Hello <%= partial "nested1", :text => "world!" %>')
+    stubs_file_exists_and_returns('nested1.html.erb', '<%= text %> <%= partial "nested2", :text => "Wazzup?!" %>')
+    stubs_file_exists_and_returns('nested2.html.erb', '<%= text %>')
     
     @page.partial('parent').should == 'Hello world! Wazzup?!'
   end
   
   it "should render the ERB template" do
     @page.render.should == File.read(fixture('template.html'))
+  end
+  
+  private
+  
+  def stubs_file_exists_and_returns(fixture_name, data)
+    path = File.join(FIXTURE_PATH, fixture_name)
+    File.stubs(:exist?).with(path).returns(true)
+    File.stubs(:read).with(path).returns(data)
   end
 end
