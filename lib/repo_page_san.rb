@@ -5,21 +5,17 @@ require 'tempfile'
 require 'yaml'
 
 class RepoPageSan
-  attr_reader :account, :spec, :index
+  attr_reader :account, :spec, :index, :template
   
   def initialize(account, spec)
     @account  = account
     @spec     = spec
     @index    = ReposIndex.new(@account)
-  end
-  
-  def template
-    @template ||= Template.new(File.join(@index.path, 'template'), @index.repos.map { |r| r.spec })
+    @template = Template.new(File.join(@index.path, 'template'), @index.repos.map { |r| r.spec })
   end
   
   def render!
-    html = template.render
-    File.open(File.join(@index.path, 'index.html'), 'w') { |f| f << html }
+    File.open(File.join(@index.path, 'index.html'), 'w') { |f| f << @template.render }
   end
   
   def release!
