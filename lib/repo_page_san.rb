@@ -81,6 +81,7 @@ class RepoPageSan
     end
     
     def push!
+      puts "Pushing branch `gh-pages' to remote `#{url}'"
       pages_repo.push('origin', 'gh-pages')
     end
     
