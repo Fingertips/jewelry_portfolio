@@ -55,7 +55,7 @@ class RepoPageSan
     def specs
       unless @specs
         load_pages_repo!
-        @specs = YAML.load(File.read(repos_file))
+        @specs = File.exist?(repos_file) ? YAML.load(File.read(repos_file)) : []
       end
       @specs
     end

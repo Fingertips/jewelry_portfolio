@@ -71,7 +71,14 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
     @index.specs.map { |s| s.name }.should == %w{ dr-nic-magic-awesome microgem }
   end
   
+  it "should return an empty array if the repos.yml file does not exist yet" do
+    FileUtils.rm(@index.repos_file)
+    @index.specs.should == []
+  end
+  
   it "should return an array of repos with their gemspecs" do
+    FileUtils.rm_rf(TMP_PAGES_REPO)
+    
     @index.repos.should == [
       RepoPageSan::Repo.new(fixture_eval('dr-nic-magic-awesome.gemspec_')),
       RepoPageSan::Repo.new(fixture_eval('microgem.gemspec_'))
