@@ -22,7 +22,7 @@ class RepoPageSan
   
   def release!
     render!
-    @index.commit! "Updated github pages for `#{@spec.name} #{@spec.version}'"
+    @index.commit! "Updated github pages for: #{@spec.name}-#{@spec.version}"
     @index.push!
   end
   
@@ -34,7 +34,7 @@ class RepoPageSan
     end
     
     def url
-      "git://github.com/#{@account}/#{repo_name}"
+      "git@github.com:#{@account}/#{repo_name}"
     end
     
     def path

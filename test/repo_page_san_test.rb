@@ -31,7 +31,7 @@ describe "RepoPageSan" do
   
   it "should render, commit, and push the `gh-pages' branch" do
     @instance.expects(:render!)
-    @instance.index.expects(:commit!).with("Updated github pages for `dr-nic-magic-awesome 1.0.0'")
+    @instance.index.expects(:commit!).with("Updated github pages for: dr-nic-magic-awesome-1.0.0")
     @instance.index.expects(:push!)
     
     @instance.release!

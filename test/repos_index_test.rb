@@ -10,7 +10,7 @@ describe "RepoPageSan::ReposIndex. in general" do
   end
   
   it "should return the url to the pages repo" do
-    @index.url.should == "git://github.com/alloy/alloy.github.com.git"
+    @index.url.should == "git@github.com:alloy/alloy.github.com.git"
   end
   
   it "should return the path to the tmp checkout of the pages repo" do
@@ -57,6 +57,8 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
   it "should create and checkout the `gh-pages' branch" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
     @index.pages_repo.branch('gh-pages').should.be.current
+    @index.pages_repo.config('branch.gh-pages.remote').should == 'origin'
+    @index.pages_repo.config('branch.gh-pages.merge').should == 'refs/heads/gh-pages'
   end
   
   it "should return the pages repo" do
