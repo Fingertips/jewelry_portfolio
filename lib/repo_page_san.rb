@@ -98,6 +98,7 @@ class RepoPageSan
     def load_pages_repo!
       unless @pages_repo
         if File.exist?(path)
+          puts "Pulling `#{url}'"
           @pages_repo = Git.open(path)
           @pages_repo.checkout('gh-pages')
           @pages_repo.pull('origin', 'gh-pages')
@@ -108,6 +109,8 @@ class RepoPageSan
           branch = @pages_repo.branch('gh-pages')
           branch.create
           branch.checkout
+          @pages_repo.config('branch.gh-pages.remote', 'origin')
+          @pages_repo.config('branch.gh-pages.merge', 'refs/heads/gh-pages')
         end
       end
     end
