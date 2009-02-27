@@ -11,6 +11,11 @@ describe "RepoPageSan" do
     @instance = RepoPageSan.new('alloy', @spec)
   end
   
+  it "should add the spec to the index" do
+    RepoPageSan::ReposIndex.any_instance.expects(:add).with(@spec)
+    RepoPageSan.new('alloy', @spec)
+  end
+  
   it "should return the local pages repos index" do
     index = @instance.index
     index.should.be.instance_of RepoPageSan::ReposIndex

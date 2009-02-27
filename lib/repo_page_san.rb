@@ -14,6 +14,8 @@ class RepoPageSan
     @spec     = spec
     @index    = ReposIndex.new(@account)
     @template = Template.new(File.join(@index.path, 'template'), @index.specs)
+    
+    @index.add(spec)
   end
   
   def render!
