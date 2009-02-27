@@ -45,10 +45,12 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
     File.should.exist File.join(TMP_PAGES_REPO, 'repos.yml')
   end
   
-  it "should not create a new checkout if it already exists" do
+  it "should not create a new checkout if it already exists, but do a pull" do
     @index.pages_repo # make sure it exists
+    @index.instance_variable_set("@pages_repo", nil)
     
     Git.expects(:clone).never
+    Git::Base.any_instance.expects(:pull).with('origin', 'gh-pages')
     @index.pages_repo
   end
   

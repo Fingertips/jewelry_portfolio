@@ -97,6 +97,7 @@ class RepoPageSan
         if File.exist?(path)
           @pages_repo = Git.open(path)
           @pages_repo.checkout('gh-pages')
+          @pages_repo.pull('origin', 'gh-pages')
         else
           puts "Cloning `#{url}'"
           @pages_repo = Git.clone(url, repo_name, :path => File.dirname(path))
