@@ -61,7 +61,8 @@ class RepoPageSan
     end
     
     def commit!(message)
-      pages_repo.commit_all(message)
+      pages_repo.add
+      pages_repo.commit(message)
     end
     
     def push!

@@ -80,7 +80,14 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
   
   it "should commit the changes to the pages repo" do
     assert_difference('@index.pages_repo.log.size', +1) do
-      File.open(@index.repos_file, 'w') { |f| f << '' }
+      File.open(@index.repos_file, 'w') { |f| f << 'foo' }
+      @index.commit!('test commit')
+    end
+  end
+  
+  it "should also commit new files to the pages repo" do
+    assert_difference('@index.pages_repo.log.size', +1) do
+      File.open(File.join(@index.path, 'foo'), 'w') { |f| f << 'foo' }
       @index.commit!('test commit')
     end
   end
