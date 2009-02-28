@@ -8,24 +8,24 @@ class GemSpecMock
   end
 end
 
-describe "RepoPageSan::Template" do
+describe "JewelryPortfolio::Template" do
   before do
     @specs = [
       GemSpecMock.new('dr-nic-magic-awesome', "Magically fix your projects overnight!"),
       GemSpecMock.new('microgem', "MicroGem provides a simple naive replacement for the `gem install' command in the form of the `mgem' commandline utility.")
     ]
     
-    @page = RepoPageSan::Template.new(fixture('template'), @specs)
+    @page = JewelryPortfolio::Template.new(fixture('template'), @specs)
   end
   
-  it "should raise a RepoPageSan::FileMissingError if the specified template does not exist" do
+  it "should raise a JewelryPortfolio::FileMissingError if the specified template does not exist" do
     e = nil
     begin
-      RepoPageSan::Template.new('/not/existing/template', @specs)
-    rescue RepoPageSan::FileMissingError => e
+      JewelryPortfolio::Template.new('/not/existing/template', @specs)
+    rescue JewelryPortfolio::FileMissingError => e
     end
     
-    e.should.be.instance_of RepoPageSan::FileMissingError
+    e.should.be.instance_of JewelryPortfolio::FileMissingError
     e.message.should == "Could not find template at path `/not/existing/template.html.erb'"
   end
   

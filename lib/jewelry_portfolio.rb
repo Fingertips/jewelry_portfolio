@@ -4,7 +4,7 @@ require 'rubygems/specification'
 require 'tempfile'
 require 'yaml'
 
-class RepoPageSan
+class JewelryPortfolio
   class FileMissingError < StandardError; end
   
   attr_reader :account, :spec, :index, :template

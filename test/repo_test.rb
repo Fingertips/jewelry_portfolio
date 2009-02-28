@@ -1,9 +1,9 @@
 require File.expand_path('../test_helper', __FILE__)
 
-describe "RepoPageSan::Repo" do
+describe "JewelryPortfolio::Repo" do
   before do
     @spec = fixture_eval('dr-nic-magic-awesome.gemspec_')
-    @repo = RepoPageSan::Repo.new(@spec)
+    @repo = JewelryPortfolio::Repo.new(@spec)
   end
   
   it "should return the Gem::Specification instance" do
@@ -19,10 +19,10 @@ describe "RepoPageSan::Repo" do
   end
   
   it "should be equal if the name matches" do
-    RepoPageSan::Repo.new(fixture_eval('dr-nic-magic-awesome.gemspec_')).should ==
-      RepoPageSan::Repo.new(fixture_eval('dr-nic-magic-awesome.gemspec_'))
+    JewelryPortfolio::Repo.new(fixture_eval('dr-nic-magic-awesome.gemspec_')).should ==
+      JewelryPortfolio::Repo.new(fixture_eval('dr-nic-magic-awesome.gemspec_'))
     
-    RepoPageSan::Repo.new(fixture_eval('dr-nic-magic-awesome.gemspec_')).should.not ==
-      RepoPageSan::Repo.new(fixture_eval('microgem.gemspec_'))
+    JewelryPortfolio::Repo.new(fixture_eval('dr-nic-magic-awesome.gemspec_')).should.not ==
+      JewelryPortfolio::Repo.new(fixture_eval('microgem.gemspec_'))
   end
 end

@@ -1,32 +1,32 @@
 require File.expand_path('../test_helper', __FILE__)
 
-describe "RepoPageSan" do
+describe "JewelryPortfolio" do
   before do
-    RepoPageSan::ReposIndex.any_instance.stubs(:url).returns(fixture('alloy.github.com'))
-    RepoPageSan::ReposIndex.any_instance.stubs(:path).returns(TMP_PAGES_REPO)
-    RepoPageSan::ReposIndex.any_instance.stubs(:puts)
+    JewelryPortfolio::ReposIndex.any_instance.stubs(:url).returns(fixture('alloy.github.com'))
+    JewelryPortfolio::ReposIndex.any_instance.stubs(:path).returns(TMP_PAGES_REPO)
+    JewelryPortfolio::ReposIndex.any_instance.stubs(:puts)
     FileUtils.rm_rf(TMP_PAGES_REPO)
     
     @spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_'))
-    @instance = RepoPageSan.new('alloy', @spec)
+    @instance = JewelryPortfolio.new('alloy', @spec)
     
     @instance.stubs(:puts)
   end
   
   it "should add the spec to the index" do
-    RepoPageSan::ReposIndex.any_instance.expects(:add).with(@spec)
-    RepoPageSan.new('alloy', @spec)
+    JewelryPortfolio::ReposIndex.any_instance.expects(:add).with(@spec)
+    JewelryPortfolio.new('alloy', @spec)
   end
   
   it "should return the local pages repos index" do
     index = @instance.index
-    index.should.be.instance_of RepoPageSan::ReposIndex
+    index.should.be.instance_of JewelryPortfolio::ReposIndex
     index.repos.map { |r| r.spec.name }.should == %w{ dr-nic-magic-awesome microgem }
   end
   
   it "should return the template" do
     template = @instance.template
-    template.should.be.instance_of RepoPageSan::Template
+    template.should.be.instance_of JewelryPortfolio::Template
     template.template.should == File.join(@instance.index.path, 'template.html.erb')
     template.specs.should == @instance.index.repos.map { |r| r.spec }
   end

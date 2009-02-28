@@ -5,7 +5,7 @@ require 'rake/rdoctask'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
-    s.name = "repo_page_san"
+    s.name = "jewelry_portfolio"
     s.summary = %Q{TODO}
     s.email = "eloy.de.enige@gmail.com"
     s.homepage = "http://github.com/alloy/repo_page_san"
@@ -18,7 +18,7 @@ end
 
 Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = 'repo_page_san'
+  rdoc.title = 'Jewelry Portfolio'
   rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')

@@ -1,8 +1,8 @@
 require File.expand_path('../test_helper', __FILE__)
 
-describe "RepoPageSan::ReposIndex. in general" do
+describe "JewelryPortfolio::ReposIndex. in general" do
   before do
-    @index = RepoPageSan::ReposIndex.new('alloy')
+    @index = JewelryPortfolio::ReposIndex.new('alloy')
   end
   
   it "should return the account" do
@@ -22,9 +22,9 @@ describe "RepoPageSan::ReposIndex. in general" do
   end
 end
 
-describe "RepoPageSan::ReposIndex, when working with a pages repo" do
+describe "JewelryPortfolio::ReposIndex, when working with a pages repo" do
   before do
-    @index = RepoPageSan::ReposIndex.new('alloy')
+    @index = JewelryPortfolio::ReposIndex.new('alloy')
     @index.stubs(:url).returns(fixture('alloy.github.com'))
     @index.stubs(:path).returns(TMP_PAGES_REPO)
     
@@ -82,8 +82,8 @@ describe "RepoPageSan::ReposIndex, when working with a pages repo" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
     
     @index.repos.should == [
-      RepoPageSan::Repo.new(fixture_eval('dr-nic-magic-awesome.gemspec_')),
-      RepoPageSan::Repo.new(fixture_eval('microgem.gemspec_'))
+      JewelryPortfolio::Repo.new(fixture_eval('dr-nic-magic-awesome.gemspec_')),
+      JewelryPortfolio::Repo.new(fixture_eval('microgem.gemspec_'))
     ]
   end
   

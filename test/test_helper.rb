@@ -3,7 +3,7 @@ require 'test/spec'
 require 'mocha'
 
 $:.unshift File.expand_path('../../lib', __FILE__)
-require 'repo_page_san'
+require 'jewelry_portfolio'
 
 TMP_PATH = File.expand_path('../tmp', __FILE__)
 FileUtils.mkdir_p(TMP_PATH) unless File.exist?(TMP_PATH)
