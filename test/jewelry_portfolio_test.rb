@@ -18,6 +18,11 @@ describe "JewelryPortfolio" do
     JewelryPortfolio.new('alloy', @spec)
   end
   
+  it "should also initialize without gemspec" do
+    JewelryPortfolio::ReposIndex.any_instance.expects(:add).never
+    JewelryPortfolio.new('alloy')
+  end
+  
   it "should return the local pages repos index" do
     index = @instance.index
     index.should.be.instance_of JewelryPortfolio::ReposIndex

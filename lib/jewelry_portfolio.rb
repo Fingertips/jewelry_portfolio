@@ -9,13 +9,13 @@ class JewelryPortfolio
   
   attr_reader :account, :spec, :index, :template
   
-  def initialize(account, spec)
+  def initialize(account, spec = nil)
     @account  = account
     @spec     = spec
     @index    = ReposIndex.new(@account)
     @template = Template.new(File.join(@index.path, 'template'), @index.specs)
     
-    @index.add(spec)
+    @index.add(@spec) if @spec
   end
   
   def render!
