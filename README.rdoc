@@ -22,7 +22,10 @@ pages repository:
 * <b>Rakefile:</b>
 
     require 'jewelry_portfolio/tasks'
-    JewelryPortfolio::Tasks.new
+    JewelryPortfolio::Tasks.new do |t|
+      # Only specify the account if it's different from `github.user' in the git config.
+      t.account = 'Fingertips'
+    end
 
 * <b>template.html.erb:</b>
   
