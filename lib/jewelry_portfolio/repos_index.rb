@@ -82,7 +82,8 @@ class JewelryPortfolio
       unless @custom_work_directory
         puts "Pulling `#{url}'"
         @pages_repo.checkout('gh-pages')
-        @pages_repo.pull('origin', 'gh-pages')
+        @pages_repo.fetch('origin')
+        @pages_repo.merge('origin/gh-pages')
       end
     end
     
@@ -93,8 +94,6 @@ class JewelryPortfolio
       branch = @pages_repo.branch('gh-pages')
       branch.create
       branch.checkout
-      @pages_repo.config('branch.gh-pages.remote', 'origin')
-      @pages_repo.config('branch.gh-pages.merge', 'refs/heads/gh-pages')
     end
   end
 end
