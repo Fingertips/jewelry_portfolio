@@ -7,10 +7,10 @@ class JewelryPortfolio
   
   attr_reader :account, :spec, :index, :template
   
-  def initialize(account, options = {})
+  def initialize(account, spec = nil)
     @account  = account
-    @spec     = options[:spec]
-    @index    = ReposIndex.new(@account, options[:work_directory])
+    @spec     = spec
+    @index    = ReposIndex.new(@account, (Dir.pwd unless @spec))
     @template = Template.new(File.join(@index.path, 'template'), @index.specs)
     
     @index.add(@spec) if @spec

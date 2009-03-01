@@ -8,14 +8,14 @@ describe "JewelryPortfolio" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
     
     @spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_'))
-    @portfolio = JewelryPortfolio.new('alloy', :spec => @spec)
+    @portfolio = JewelryPortfolio.new('alloy', @spec)
     
     @portfolio.stubs(:puts)
   end
   
   it "should add the spec to the index" do
     JewelryPortfolio::ReposIndex.any_instance.expects(:add).with(@spec)
-    JewelryPortfolio.new('alloy', :spec => @spec)
+    JewelryPortfolio.new('alloy', @spec)
   end
   
   it "should also initialize without gemspec" do
@@ -54,11 +54,11 @@ describe "JewelryPortfolio, with a custom work_directory" do
   before do
     JewelryPortfolio::ReposIndex.any_instance.stubs(:load_pages_repo!)
     JewelryPortfolio::Template.stubs(:new)
-    @portfolio = JewelryPortfolio.new('alloy', :work_directory => '/path/to/repo')
+    @portfolio = JewelryPortfolio.new('alloy')
   end
   
-  it "should initialize the index with a custom work_directory" do
-    @portfolio.index.instance_variable_get("@custom_work_directory").should == '/path/to/repo'
+  it "should initialize the index with the current work directory if no spec is given" do
+    @portfolio.index.instance_variable_get("@custom_work_directory").should == Dir.pwd
   end
   
   it "should render, commit, and push the `gh-pages' branch" do
