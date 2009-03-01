@@ -8,9 +8,9 @@ describe "JewelryPortfolio" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
     
     @spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_'))
-    @instance = JewelryPortfolio.new('alloy', :spec => @spec)
+    @portfolio = JewelryPortfolio.new('alloy', :spec => @spec)
     
-    @instance.stubs(:puts)
+    @portfolio.stubs(:puts)
   end
   
   it "should add the spec to the index" do
@@ -24,29 +24,29 @@ describe "JewelryPortfolio" do
   end
   
   it "should return the local pages repos index" do
-    index = @instance.index
+    index = @portfolio.index
     index.should.be.instance_of JewelryPortfolio::ReposIndex
     index.repos.map { |r| r.spec.name }.should == %w{ dr-nic-magic-awesome microgem }
   end
   
   it "should return the template" do
-    template = @instance.template
+    template = @portfolio.template
     template.should.be.instance_of JewelryPortfolio::Template
-    template.template.should == File.join(@instance.index.path, 'template.html.erb')
-    template.specs.should == @instance.index.repos.map { |r| r.spec }
+    template.template.should == File.join(@portfolio.index.path, 'template.html.erb')
+    template.specs.should == @portfolio.index.repos.map { |r| r.spec }
   end
   
   it "should write out the template" do
-    @instance.render!
-    File.read(File.join(@instance.index.path, 'index.html')).should == File.read(fixture('template.html'))
+    @portfolio.render!
+    File.read(File.join(@portfolio.index.path, 'index.html')).should == File.read(fixture('template.html'))
   end
   
   it "should render, commit, and push the `gh-pages' branch" do
-    @instance.expects(:render!)
-    @instance.index.expects(:commit!).with("Updated github pages for: dr-nic-magic-awesome-1.0.0")
-    @instance.index.expects(:push!)
+    @portfolio.expects(:render!)
+    @portfolio.index.expects(:commit!).with("Updated github pages for: dr-nic-magic-awesome-1.0.0")
+    @portfolio.index.expects(:push!)
     
-    @instance.release!
+    @portfolio.release!
   end
 end
 
@@ -54,18 +54,18 @@ describe "JewelryPortfolio, with a custom work_directory" do
   before do
     JewelryPortfolio::ReposIndex.any_instance.stubs(:load_pages_repo!)
     JewelryPortfolio::Template.stubs(:new)
-    @instance = JewelryPortfolio.new('alloy', :work_directory => '/path/to/repo')
+    @portfolio = JewelryPortfolio.new('alloy', :work_directory => '/path/to/repo')
   end
   
   it "should initialize the index with a custom work_directory" do
-    @instance.index.instance_variable_get("@custom_work_directory").should == '/path/to/repo'
+    @portfolio.index.instance_variable_get("@custom_work_directory").should == '/path/to/repo'
   end
   
   it "should render, commit, and push the `gh-pages' branch" do
-    @instance.expects(:render!)
-    @instance.index.expects(:commit!).with("Re-generated github pages")
-    @instance.index.expects(:push!)
+    @portfolio.expects(:render!)
+    @portfolio.index.expects(:commit!).with("Re-generated github pages")
+    @portfolio.index.expects(:push!)
     
-    @instance.release!
+    @portfolio.release!
   end
 end
