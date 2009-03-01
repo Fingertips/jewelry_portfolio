@@ -10,27 +10,50 @@ if defined?(Jeweler)
   end
 end
 
-namespace :portfolio do
-  desc "Generate the HTML"
-  task :generate do
-    portfolio.render!
-    sh "open '#{File.join(portfolio.index.path, 'index.html')}'"
-  end
-  
-  desc "Generates the HTML and commits and pushes the new release"
-  task :release do
-    portfolio.release!
-  end
-  
-  private
-  
-  def portfolio
-    if @portfolio.nil?
-      if spec_file = Dir.glob('*.gemspec').first
-        spec = eval(File.read(spec_file))
+class JewelryPortfolio
+  class Tasks
+    attr_accessor :account
+    
+    def initialize
+      yield self if block_given?
+      
+      @account ||= github_username
+      unless @account
+        raise ArgumentError, "Unable to determine `account'. Add a github user entry to your global, or local, git config. Or explicitely set the `account' on the JewelryPortfolio::Tasks instance."
       end
-      @portfolio = JewelryPortfolio.new('alloy', spec)
+      
+      define
     end
-    @portfolio
+    
+    private
+    
+    def define
+      namespace :portfolio do
+        desc "Generate the HTML"
+        task :generate do
+          portfolio.render!
+          sh "open '#{File.join(portfolio.index.path, 'index.html')}'"
+        end
+        
+        desc "Generates the HTML and commits and pushes the new release"
+        task :release do
+          portfolio.release!
+        end
+      end
+    end
+    
+    def portfolio
+      if @portfolio.nil?
+        if spec_file = Dir.glob('*.gemspec').first
+          spec = eval(File.read(spec_file))
+        end
+        @portfolio = JewelryPortfolio.new(@account, spec)
+      end
+      @portfolio
+    end
+    
+    def github_username
+      Git.open('.').config['github.user']
+    end
   end
 end
