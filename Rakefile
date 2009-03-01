@@ -13,7 +13,7 @@ begin
     
     s.summary = %Q{ An add-on for Jeweler for lazy developers who would like to showcase their jewelry portfolio on their GitHub pages. }
     s.description = %{
-      Imagine writing an erb template once and use <tt>rake release</tt> to release
+      Imagine writing an erb template once and use rake release to release
       your gem with Jeweler as usual, but in addition re-generate and push the
       index.html for your GitHub pages. If that sounds good to you, you're in luck.
       Because that's exactly what this add-on for
