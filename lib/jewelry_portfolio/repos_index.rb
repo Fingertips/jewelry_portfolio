@@ -55,12 +55,12 @@ class JewelryPortfolio
     
     def commit!(message)
       pages_repo.add
-      pages_repo.commit(message)
+      reraise_with_path { pages_repo.commit(message) }
     end
     
     def push!
       puts "Pushing branch `gh-pages' to remote `#{url}'"
-      pages_repo.push('origin', 'gh-pages')
+      reraise_with_path { pages_repo.push('origin', 'gh-pages') }
     end
     
     def to_yaml
@@ -68,6 +68,14 @@ class JewelryPortfolio
     end
     
     private
+    
+    def reraise_with_path
+      begin
+        yield
+      rescue Git::GitExecuteError => e
+        raise Git::GitExecuteError, "[#{path}] #{e.message}"
+      end
+    end
     
     def update_repos_file!
       File.open(repos_file, 'w') { |f| f << to_yaml }
@@ -78,22 +86,26 @@ class JewelryPortfolio
     end
     
     def open_existing_repo!
-      @pages_repo = Git.open(path)
-      unless @custom_work_directory
-        puts "Pulling `#{url}'"
-        @pages_repo.checkout('gh-pages')
-        @pages_repo.fetch('origin')
-        @pages_repo.merge('origin/gh-pages')
+      reraise_with_path do
+        @pages_repo = Git.open(path)
+        unless @custom_work_directory
+          puts "Pulling `#{url}'"
+          @pages_repo.checkout('gh-pages')
+          @pages_repo.fetch('origin')
+          @pages_repo.merge('origin/gh-pages')
+        end
       end
     end
     
     def open_new_repo!
-      puts "Cloning `#{url}'"
-      @pages_repo = Git.clone(url, repo_name, :path => File.dirname(path))
-      @pages_repo.checkout('origin/gh-pages')
-      branch = @pages_repo.branch('gh-pages')
-      branch.create
-      branch.checkout
+      reraise_with_path do
+        puts "Cloning `#{url}'"
+        @pages_repo = Git.clone(url, repo_name, :path => File.dirname(path))
+        @pages_repo.checkout('origin/gh-pages')
+        branch = @pages_repo.branch('gh-pages')
+        branch.create
+        branch.checkout
+      end
     end
   end
 end

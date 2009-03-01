@@ -171,6 +171,19 @@ describe "JewelryPortfolio::ReposIndex, when working with a pages repo" do
     repos_from_file.first.version.to_s.should == '1.1.1'
   end
   
+  it "should re-raise Git::GitExecuteErrors with the repo path prepended" do
+    message = nil
+    @index.commit! 'clean'
+    
+    begin
+      @index.commit! 'error'
+    rescue Git::GitExecuteError => e
+      message = e.message
+    end
+    
+    message.should.match /^\[#{@index.path}\]/
+  end
+  
   private
   
   def repos_from_file
