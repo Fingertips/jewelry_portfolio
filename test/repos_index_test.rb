@@ -9,6 +9,10 @@ describe "JewelryPortfolio::ReposIndex, in general" do
     @index.account.should == 'alloy'
   end
   
+  it "should return the repo name" do
+    @index.repo_name.should == 'alloy.github.com.git'
+  end
+  
   it "should return the url to the pages repo" do
     @index.url.should == "git@github.com:alloy/alloy.github.com.git"
   end
@@ -29,7 +33,7 @@ describe "JewelryPortfolio::ReposIndex, in general, when the user specified a wo
   end
   
   it "should return the path to the tmp checkout of the pages repo" do
-    @index.path.should == '/path/to/repo/alloy.github.com.git'
+    @index.path.should == '/path/to/repo'
   end
   
   it "should return the path to the repos YAML index file" do

@@ -41,11 +41,11 @@ class JewelryPortfolio
     end
     
     def path
-      File.join(@custom_work_directory || Dir.tmpdir, repo_name)
+      @path ||= @custom_work_directory || File.join(Dir.tmpdir, repo_name)
     end
     
     def repo_name
-      "#{@account}.github.com.git"
+      @repo_name ||= "#{@account}.github.com.git"
     end
     
     def pages_repo

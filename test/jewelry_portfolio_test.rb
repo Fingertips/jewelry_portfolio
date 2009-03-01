@@ -23,6 +23,11 @@ describe "JewelryPortfolio" do
     JewelryPortfolio.new('alloy')
   end
   
+  it "should initialize with a custom work_directory" do
+    @instance = JewelryPortfolio.new('alloy', :work_directory => '/path/to/repo')
+    @instance.index.instance_variable_get("@custom_work_directory").should == '/path/to/repo'
+  end
+  
   it "should return the local pages repos index" do
     index = @instance.index
     index.should.be.instance_of JewelryPortfolio::ReposIndex
