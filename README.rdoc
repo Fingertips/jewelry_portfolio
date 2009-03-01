@@ -87,6 +87,10 @@ jewelry portfolio like so:
     # Add the following to your Rakefile to use JewelryPortfolio
     begin
       require 'jewelry_portfolio/tasks'
+      JewelryPortfolio::Tasks.new do |t|
+        # Only specify the account if it's different from `github.user' in the git config.
+        t.account = 'Fingertips'
+      end
     rescue LoadError
       puts "JewelryPortfolio not available. Install it with: sudo gem install Fingertips-jewelry_portfolio -s http://gems.github.com"
     end
@@ -101,6 +105,8 @@ index.html will be re-generated and pushed to GitHub after releasing the gem.
 If you just want to re-generate, or release, the jewelry portfolio use the
 aforementioned <tt>portfolio:generate</tt> and <tt>portfolio:release</tt> rake
 tasks.
+
+Note that it isn't necessary to use Jeweler to be able to use JewelryPortfolio.
 
 == COPYRIGHT
 

@@ -16,9 +16,17 @@ begin
       Imagine writing an erb template once and use rake release to release
       your gem with Jeweler as usual, but in addition re-generate and push the
       index.html for your GitHub pages. If that sounds good to you, you're in luck.
-      Because that's exactly what this add-on for
-      Jeweler[http://github.com/technicalpickles/jeweler/tree/master] does.
+      Because that's exactly what this add-on for Jeweler does.
     }
+  end
+  
+  begin
+    require 'jewelry_portfolio/tasks'
+    JewelryPortfolio::Tasks.new do |t|
+      #t.account = 'Fingertips'
+    end
+  rescue LoadError
+    puts "JewelryPortfolio not available. Install it with: sudo gem install Fingertips-jewelry_portfolio -s http://gems.github.com"
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
