@@ -22,6 +22,14 @@ describe "JewelryPortfolio::Repo" do
     @repo.clone_url.should == 'git://github.com/alloy/dr-nic-magic-awesome.git'
   end
   
+  it "should return the gem name" do
+    @repo.gem_name.should == "alloy-dr-nic-magic-awesome"
+  end
+  
+  it "should return the gem install command" do
+    @repo.gem_install_command.should == "sudo gem install #{@repo.gem_name} -s http://gems.github.com"
+  end
+  
   xit "should return itself serialized as YAML" do
     @repo.to_yaml.should == fixture_read('dr-nic-magic-awesome_repo.yml')
   end

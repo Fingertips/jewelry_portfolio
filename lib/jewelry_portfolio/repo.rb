@@ -18,6 +18,14 @@ class JewelryPortfolio
       "git://github.com/#{@account}/#{name}.git"
     end
     
+    def gem_name
+      "#{@account}-#{name}"
+    end
+    
+    def gem_install_command
+      "sudo gem install #{gem_name} -s http://gems.github.com"
+    end
+    
     def ==(other)
       other.is_a?(Repo) && name == other.name
     end
