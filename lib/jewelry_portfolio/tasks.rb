@@ -12,8 +12,16 @@ end
 
 class JewelryPortfolio
   class Tasks
+    # Override this if this project is on another account than the one
+    # specified by `github.user' in your global or local git config.
     attr_accessor :account
     
+    # Initialize the JewelryPortfolio rake tasks. The instance is yielded so
+    # additional configuration can be performed.
+    #
+    #   JewelryPortfolio::Tasks.new do |t|
+    #     t.account = 'Fingertips'
+    #   end
     def initialize
       yield self if block_given?
       
