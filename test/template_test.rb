@@ -10,18 +10,18 @@ end
 
 describe "JewelryPortfolio::Template" do
   before do
-    @specs = [
-      GemSpecMock.new('dr-nic-magic-awesome', "Magically fix your projects overnight!"),
-      GemSpecMock.new('microgem', "MicroGem provides a simple naive replacement for the `gem install' command in the form of the `mgem' commandline utility.")
+    @repos = [
+      JewelryPortfolio::Repo.new(GemSpecMock.new('dr-nic-magic-awesome', "Magically fix your projects overnight!")),
+      JewelryPortfolio::Repo.new(GemSpecMock.new('microgem', "MicroGem provides a simple naive replacement for the `gem install' command in the form of the `mgem' commandline utility."))
     ]
     
-    @page = JewelryPortfolio::Template.new(fixture('template'), @specs)
+    @page = JewelryPortfolio::Template.new(fixture('template'), @repos)
   end
   
   it "should raise a JewelryPortfolio::FileMissingError if the specified template does not exist" do
     e = nil
     begin
-      JewelryPortfolio::Template.new('/not/existing/template', @specs)
+      JewelryPortfolio::Template.new('/not/existing/template', @repos)
     rescue JewelryPortfolio::FileMissingError => e
     end
     
@@ -33,32 +33,32 @@ describe "JewelryPortfolio::Template" do
     @page.template.should == fixture('template.html.erb')
   end
   
-  it "should return the specs" do
-    @page.specs.should == @specs
+  it "should return the repos" do
+    @page.repos.should == @repos
   end
   
   it "should return the view_path" do
     @page.view_path.should == FIXTURE_PATH
   end
   
-  it "should render with the specified gem specs available as `specs'" do
-    File.stubs(:read).returns('<%= specs.inspect %>')
-    @page.render.should == @specs.inspect
+  it "should render with the specified gem repos available as `repos'" do
+    File.stubs(:read).returns('<%= repos.inspect %>')
+    @page.render.should == @repos.inspect
   end
   
   it "should render an ERB partial with the specified local variables" do
-    @page.partial('spec', :spec => @specs.first).should ==
+    @page.partial('repo', :repo => @repos.first).should ==
       File.read(fixture('dr-nic-magic-awesome.html'))
   end
   
-  it "should render an ERB partial with the specified spec" do
-    @page.spec_partial(@specs.first).should ==
+  it "should render an ERB partial with the specified repo" do
+    @page.repo_partial(@repos.first).should ==
       File.read(fixture('dr-nic-magic-awesome.html'))
   end
   
-  it "should render an ERB partial with the specified spec and local variables" do
-    File.stubs(:read).returns('<%= "#{spec} #{extra_var}" %>')
-    @page.spec_partial('spec_value', :extra_var => 'extra_var_value').should == 'spec_value extra_var_value'
+  it "should render an ERB partial with the specified repo and local variables" do
+    File.stubs(:read).returns('<%= "#{repo} #{extra_var}" %>')
+    @page.repo_partial('repo_value', :extra_var => 'extra_var_value').should == 'repo_value extra_var_value'
   end
   
   it "should render an ERB partial with nested partials" do

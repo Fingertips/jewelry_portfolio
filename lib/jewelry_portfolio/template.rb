@@ -2,13 +2,13 @@ require 'erb'
 
 class JewelryPortfolio
   class Template
-    attr_reader :template, :specs, :view_path
+    attr_reader :template, :repos, :view_path
     
-    def initialize(template, specs)
+    def initialize(template, repos)
       template   = File.expand_path(template)
       @view_path = File.dirname(template)
       @template  = html_template_file(File.basename(template))
-      @specs     = specs
+      @repos     = repos
     end
     
     def render
@@ -22,8 +22,8 @@ class JewelryPortfolio
       erb html_template_file(partial_name), binding
     end
     
-    def spec_partial(spec, local_variables = {})
-      partial 'spec', local_variables.merge(:spec => spec)
+    def repo_partial(repo, local_variables = {})
+      partial 'repo', local_variables.merge(:repo => repo)
     end
     
     private

@@ -11,7 +11,7 @@ class JewelryPortfolio
     @account  = account
     @spec     = spec
     @index    = ReposIndex.new(@account, (Dir.pwd unless @spec))
-    @template = Template.new(File.join(@index.path, 'template'), @index.specs)
+    @template = Template.new(File.join(@index.path, 'template'), @index.repos)
     
     @index.add(@spec) if @spec
   end

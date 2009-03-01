@@ -13,5 +13,9 @@ class JewelryPortfolio
     def ==(other)
       other.is_a?(Repo) && name == other.name
     end
+    
+    def inspect
+      "#<#{self.class.name} name=\"#{name}\">"
+    end
   end
 end

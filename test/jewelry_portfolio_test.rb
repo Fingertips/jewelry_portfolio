@@ -33,7 +33,7 @@ describe "JewelryPortfolio" do
     template = @portfolio.template
     template.should.be.instance_of JewelryPortfolio::Template
     template.template.should == File.join(@portfolio.index.path, 'template.html.erb')
-    template.specs.should == @portfolio.index.repos.map { |r| r.spec }
+    template.repos.should == @portfolio.index.repos
   end
   
   it "should write out the template" do
