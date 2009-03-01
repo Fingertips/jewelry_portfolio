@@ -17,7 +17,8 @@ First things first; create a GitHub pages repository if you haven't done so
 already. See http://github.com/guides/pages for more info.
 
 Then create the following files, and content, in the gh-pages branch of your
-pages repository:
+pages repository (<em>for a more elaborate example see:
+http://github.com/alloy/alloy.github.com/tree/gh-pages</em>):
 
 * <b>Rakefile:</b>
 
@@ -28,11 +29,11 @@ pages repository:
     end
 
 * <b>template.html.erb:</b>
-  
+
   This is the main template file which will be used to generate the index.html
   file. All repositories and their gem specifications are available as the
   local variable <tt>repos</tt>. See JewelryPortfolio::Template and
-  JewelryPortfolio::Repo for more information.</em>).
+  JewelryPortfolio::Repo for more information.</em>.
 
     <html>
       <head>
