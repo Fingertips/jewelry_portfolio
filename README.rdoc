@@ -1,6 +1,67 @@
 == JewelryPortfolio
 
+Surely also lazy developers like to showcase their jewelry portfolio on their
+GitHub pages.
+
+Imagine writing an erb template once and use <tt>rake release</tt> to release
+your gem with Jeweler as usual, but in addition re-generate and push the
+index.html for your GitHub pages. If that sounds good to you, you're in luck.
+Because that's exactly what this add-on for
+Jeweler[http://github.com/technicalpickles/jeweler/tree/master] does.
+
 === Usage
+
+==== GitHub pages repository
+
+First things first; create a GitHub pages repository if you haven't done so
+already. See http://github.com/guides/pages for more info.
+
+Then create the following files, and content, in the gh-pages branch of your
+pages repository:
+
+* Rakefile:
+
+    require 'jewelry_portfolio/tasks'
+
+* template.html.erb:
+
+    <html>
+      <head>
+        <title>Alloy&rsquo;s jewelry</title>
+      </head>
+
+      <p>This is an overview of the available gems by Eloy Duran, aka `alloy'.</p>
+
+      <body>
+        <% repos.each do |repo| %>
+          <%= repo_partial(repo) %>
+        <% end %>
+      </body>
+    </html>
+
+* repo.html.erb (<em>this is completely optional; it's just a showcase of using
+  a repo partial</em>):
+
+    <div>
+      <h1><a href="<%= repo.url %>"><%= spec.name %> <%= spec.version %></a></h1>
+      <p><%= spec.description %></p>
+      <p>Install: <code>$ <%= repo.gem_install_command %></code></p>
+      <p>Clone: <code>$ git clone <%= repo.clone_url %></code></p>
+    </div>
+
+Now you can generate the index.html file with:
+
+  $ rake portfolio:generate
+
+Since you haven't added any projects yet the generated index will be pretty
+dull. But for now just release this version:
+
+  $ rake portfolio:release
+
+==== Add super-cow powers to your project's Rakefile
+
+Update the Rakefile of the project that you would like to include in your
+jewelry portfolio like so:
 
   begin
     require 'jeweler'
@@ -19,6 +80,9 @@
     puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
   end
 
+From now on, whenever you use the +release+ rake task, the GitHub pages
+index.html will be re-generated and pushed to GitHub after releasing the gem.
+
 === COPYRIGHT
 
-Copyright (c) 2008 Eloy Duran. See LICENSE for details.
+Copyright (c) 2009 Fingertips, Eloy Duran. See LICENSE for details.
