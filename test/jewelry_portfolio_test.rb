@@ -8,14 +8,14 @@ describe "JewelryPortfolio" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
     
     @spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_'))
-    @instance = JewelryPortfolio.new('alloy', @spec)
+    @instance = JewelryPortfolio.new('alloy', :spec => @spec)
     
     @instance.stubs(:puts)
   end
   
   it "should add the spec to the index" do
     JewelryPortfolio::ReposIndex.any_instance.expects(:add).with(@spec)
-    JewelryPortfolio.new('alloy', @spec)
+    JewelryPortfolio.new('alloy', :spec => @spec)
   end
   
   it "should also initialize without gemspec" do

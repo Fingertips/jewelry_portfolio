@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-describe "JewelryPortfolio::ReposIndex. in general" do
+describe "JewelryPortfolio::ReposIndex, in general" do
   before do
     @index = JewelryPortfolio::ReposIndex.new('alloy')
   end
@@ -19,6 +19,29 @@ describe "JewelryPortfolio::ReposIndex. in general" do
   
   it "should return the path to the repos YAML index file" do
     @index.repos_file.should == File.join(@index.path, 'repos.yml')
+  end
+end
+
+describe "JewelryPortfolio::ReposIndex, in general, when the user specified a work directory" do
+  before do
+    @index = JewelryPortfolio::ReposIndex.new('alloy', '/path/to/repo')
+    File.stubs(:exist?).with(@index.path).returns(true)
+  end
+  
+  it "should return the path to the tmp checkout of the pages repo" do
+    @index.path.should == '/path/to/repo/alloy.github.com.git'
+  end
+  
+  it "should return the path to the repos YAML index file" do
+    @index.repos_file.should == File.join(@index.path, 'repos.yml')
+  end
+  
+  it "should not pull from the remote pages repo when opening the repo" do
+    @index.instance_variable_set("@pages_repo", nil)
+    
+    Git.expects(:open).with(@index.path)
+    Git::Base.any_instance.expects(:pull).never
+    @index.pages_repo
   end
 end
 

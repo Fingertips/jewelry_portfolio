@@ -9,10 +9,10 @@ class JewelryPortfolio
   
   attr_reader :account, :spec, :index, :template
   
-  def initialize(account, spec = nil)
+  def initialize(account, options = {})
     @account  = account
-    @spec     = spec
-    @index    = ReposIndex.new(@account)
+    @spec     = options[:spec]
+    @index    = ReposIndex.new(@account, options[:work_directory])
     @template = Template.new(File.join(@index.path, 'template'), @index.specs)
     
     @index.add(@spec) if @spec
@@ -32,8 +32,8 @@ class JewelryPortfolio
   class ReposIndex
     attr_reader :account
     
-    def initialize(account)
-      @account = account
+    def initialize(account, custom_work_directory = nil)
+      @account, @custom_work_directory = account, custom_work_directory
     end
     
     def url
@@ -41,7 +41,7 @@ class JewelryPortfolio
     end
     
     def path
-      File.join(Dir.tmpdir, repo_name)
+      File.join(@custom_work_directory || Dir.tmpdir, repo_name)
     end
     
     def repo_name
@@ -101,10 +101,12 @@ class JewelryPortfolio
     def load_pages_repo!
       unless @pages_repo
         if File.exist?(path)
-          puts "Pulling `#{url}'"
           @pages_repo = Git.open(path)
-          @pages_repo.checkout('gh-pages')
-          @pages_repo.pull('origin', 'gh-pages')
+          unless @custom_work_directory
+            puts "Pulling `#{url}'"
+            @pages_repo.checkout('gh-pages')
+            @pages_repo.pull('origin', 'gh-pages')
+          end
         else
           puts "Cloning `#{url}'"
           @pages_repo = Git.clone(url, repo_name, :path => File.dirname(path))
