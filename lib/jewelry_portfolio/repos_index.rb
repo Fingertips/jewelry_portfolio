@@ -41,7 +41,7 @@ class JewelryPortfolio
     end
     
     def repos
-      specs.map { |spec| Repo.new(spec) }
+      specs.map { |spec| Repo.new(spec, @account) }
     end
     
     def add(spec)

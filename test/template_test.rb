@@ -11,8 +11,8 @@ end
 describe "JewelryPortfolio::Template" do
   before do
     @repos = [
-      JewelryPortfolio::Repo.new(GemSpecMock.new('dr-nic-magic-awesome', "Magically fix your projects overnight!")),
-      JewelryPortfolio::Repo.new(GemSpecMock.new('microgem', "MicroGem provides a simple naive replacement for the `gem install' command in the form of the `mgem' commandline utility."))
+      JewelryPortfolio::Repo.new(GemSpecMock.new('dr-nic-magic-awesome', "Magically fix your projects overnight!"), 'alloy'),
+      JewelryPortfolio::Repo.new(GemSpecMock.new('microgem', "MicroGem provides a simple naive replacement for the `gem install' command in the form of the `mgem' commandline utility."), 'alloy')
     ]
     
     @page = JewelryPortfolio::Template.new(fixture('template'), @repos)

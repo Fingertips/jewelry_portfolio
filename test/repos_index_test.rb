@@ -111,8 +111,8 @@ describe "JewelryPortfolio::ReposIndex, when working with a pages repo" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
     
     @index.repos.should == [
-      JewelryPortfolio::Repo.new(fixture_eval('dr-nic-magic-awesome.gemspec_')),
-      JewelryPortfolio::Repo.new(fixture_eval('microgem.gemspec_'))
+      JewelryPortfolio::Repo.new(fixture_eval('dr-nic-magic-awesome.gemspec_'), 'alloy'),
+      JewelryPortfolio::Repo.new(fixture_eval('microgem.gemspec_'), 'alloy')
     ]
   end
   
