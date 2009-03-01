@@ -19,11 +19,16 @@ already. See http://github.com/guides/pages for more info.
 Then create the following files, and content, in the gh-pages branch of your
 pages repository:
 
-* Rakefile:
+* <b>Rakefile:</b>
 
     require 'jewelry_portfolio/tasks'
 
-* template.html.erb:
+* <b>template.html.erb:</b>
+  
+  This is the main template file which will be used to generate the index.html
+  file. All repositories and their gem specifications are available as the
+  local variable <tt>repos</tt>. See JewelryPortfolio::Template and
+  JewelryPortfolio::Repo for more information.</em>).
 
     <html>
       <head>
@@ -39,8 +44,10 @@ pages repository:
       </body>
     </html>
 
-* repo.html.erb (<em>this is completely optional; it's just a showcase of using
-  a repo partial</em>):
+* <b>repo.html.erb:</b>
+
+  This file is completely optional; it's just a showcase of using a repo
+  partial.
 
     <div>
       <h1><a href="<%= repo.url %>"><%= spec.name %> <%= spec.version %></a></h1>
@@ -86,7 +93,7 @@ jewelry portfolio like so:
 From now on, whenever you use the +release+ rake task, the GitHub pages
 index.html will be re-generated and pushed to GitHub after releasing the gem.
 
-If you just want to re-generate or release the jewelry portfolio use the
+If you just want to re-generate, or release, the jewelry portfolio use the
 aforementioned <tt>portfolio:generate</tt> and <tt>portfolio:release</tt> rake
 tasks.
 
