@@ -1,10 +1,12 @@
 require 'jewelry_portfolio'
 
-class Jeweler
-  alias_method :release_before_jewelry_portfolio, :release
-  def release
-    release_before_jewelry_portfolio
-    Rake::Task['portfolio:release'].invoke
+if defined?(Jeweler)
+  class Jeweler
+    alias_method :release_before_jewelry_portfolio, :release
+    def release
+      release_before_jewelry_portfolio
+      Rake::Task['portfolio:release'].invoke
+    end
   end
 end
 
