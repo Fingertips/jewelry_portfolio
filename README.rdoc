@@ -22,6 +22,7 @@ pages repository:
 * <b>Rakefile:</b>
 
     require 'jewelry_portfolio/tasks'
+    JewelryPortfolio::Tasks.new
 
 * <b>template.html.erb:</b>
   
