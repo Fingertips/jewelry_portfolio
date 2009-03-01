@@ -99,25 +99,27 @@ class JewelryPortfolio
     end
     
     def load_pages_repo!
-      unless @pages_repo
-        if File.exist?(path)
-          @pages_repo = Git.open(path)
-          unless @custom_work_directory
-            puts "Pulling `#{url}'"
-            @pages_repo.checkout('gh-pages')
-            @pages_repo.pull('origin', 'gh-pages')
-          end
-        else
-          puts "Cloning `#{url}'"
-          @pages_repo = Git.clone(url, repo_name, :path => File.dirname(path))
-          @pages_repo.checkout('origin/gh-pages')
-          branch = @pages_repo.branch('gh-pages')
-          branch.create
-          branch.checkout
-          @pages_repo.config('branch.gh-pages.remote', 'origin')
-          @pages_repo.config('branch.gh-pages.merge', 'refs/heads/gh-pages')
-        end
+      (File.exist?(path) ? open_existing_repo! : open_new_repo!) unless @pages_repo
+    end
+    
+    def open_existing_repo!
+      @pages_repo = Git.open(path)
+      unless @custom_work_directory
+        puts "Pulling `#{url}'"
+        @pages_repo.checkout('gh-pages')
+        @pages_repo.pull('origin', 'gh-pages')
       end
+    end
+    
+    def open_new_repo!
+      puts "Cloning `#{url}'"
+      @pages_repo = Git.clone(url, repo_name, :path => File.dirname(path))
+      @pages_repo.checkout('origin/gh-pages')
+      branch = @pages_repo.branch('gh-pages')
+      branch.create
+      branch.checkout
+      @pages_repo.config('branch.gh-pages.remote', 'origin')
+      @pages_repo.config('branch.gh-pages.merge', 'refs/heads/gh-pages')
     end
   end
   
