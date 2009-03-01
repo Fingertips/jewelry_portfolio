@@ -1,4 +1,4 @@
---- !ruby/object:RepoPageSan::Repo 
+--- !ruby/object:JewelryPortfolio::Repo 
 spec: |-
   Gem::Specification.new do |spec|
     spec.name = 'dr-nic-magic-awesome'

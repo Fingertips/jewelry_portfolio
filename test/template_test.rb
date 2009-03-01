@@ -47,18 +47,18 @@ describe "JewelryPortfolio::Template" do
   end
   
   it "should render an ERB partial with the specified local variables" do
-    @page.partial('repo', :repo => @repos.first).should ==
+    @page.partial('repo', :repo => @repos.first, :spec => @repos.first.spec).should ==
       File.read(fixture('dr-nic-magic-awesome.html'))
   end
   
-  it "should render an ERB partial with the specified repo" do
+  it "should render an ERB partial with the specified repo and make its spec available" do
     @page.repo_partial(@repos.first).should ==
       File.read(fixture('dr-nic-magic-awesome.html'))
   end
   
   it "should render an ERB partial with the specified repo and local variables" do
-    File.stubs(:read).returns('<%= "#{repo} #{extra_var}" %>')
-    @page.repo_partial('repo_value', :extra_var => 'extra_var_value').should == 'repo_value extra_var_value'
+    File.stubs(:read).returns('<%= "#{repo.name} #{extra_var}" %>')
+    @page.repo_partial(@repos.first, :extra_var => 'extra_var_value').should == "#{@repos.first.name} extra_var_value"
   end
   
   it "should render an ERB partial with nested partials" do
