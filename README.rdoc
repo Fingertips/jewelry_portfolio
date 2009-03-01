@@ -1,4 +1,4 @@
-== JewelryPortfolio
+= JewelryPortfolio
 
 Surely also lazy developers like to showcase their jewelry portfolio on their
 GitHub pages.
@@ -9,9 +9,9 @@ index.html for your GitHub pages. If that sounds good to you, you're in luck.
 Because that's exactly what this add-on for
 Jeweler[http://github.com/technicalpickles/jeweler/tree/master] does.
 
-=== Usage
+== Usage
 
-==== GitHub pages repository
+=== GitHub pages repository
 
 First things first; create a GitHub pages repository if you haven't done so
 already. See http://github.com/guides/pages for more info.
@@ -58,7 +58,10 @@ dull. But for now just release this version:
 
   $ rake portfolio:release
 
-==== Add super-cow powers to your project's Rakefile
+Whenever you update the template you can use these tasks to preview and/or
+release it.
+
+=== Add super-cow powers to your project's Rakefile
 
 Update the Rakefile of the project that you would like to include in your
 jewelry portfolio like so:
@@ -83,6 +86,10 @@ jewelry portfolio like so:
 From now on, whenever you use the +release+ rake task, the GitHub pages
 index.html will be re-generated and pushed to GitHub after releasing the gem.
 
-=== COPYRIGHT
+If you just want to re-generate or release the jewelry portfolio use the
+aforementioned <tt>portfolio:generate</tt> and <tt>portfolio:release</tt> rake
+tasks.
+
+== COPYRIGHT
 
 Copyright (c) 2009 Fingertips, Eloy Duran. See LICENSE for details.
