@@ -23,11 +23,6 @@ describe "JewelryPortfolio" do
     JewelryPortfolio.new('alloy')
   end
   
-  it "should initialize with a custom work_directory" do
-    @instance = JewelryPortfolio.new('alloy', :work_directory => '/path/to/repo')
-    @instance.index.instance_variable_get("@custom_work_directory").should == '/path/to/repo'
-  end
-  
   it "should return the local pages repos index" do
     index = @instance.index
     index.should.be.instance_of JewelryPortfolio::ReposIndex
@@ -49,6 +44,26 @@ describe "JewelryPortfolio" do
   it "should render, commit, and push the `gh-pages' branch" do
     @instance.expects(:render!)
     @instance.index.expects(:commit!).with("Updated github pages for: dr-nic-magic-awesome-1.0.0")
+    @instance.index.expects(:push!)
+    
+    @instance.release!
+  end
+end
+
+describe "JewelryPortfolio, with a custom work_directory" do
+  before do
+    JewelryPortfolio::ReposIndex.any_instance.stubs(:load_pages_repo!)
+    JewelryPortfolio::Template.stubs(:new)
+    @instance = JewelryPortfolio.new('alloy', :work_directory => '/path/to/repo')
+  end
+  
+  it "should initialize the index with a custom work_directory" do
+    @instance.index.instance_variable_get("@custom_work_directory").should == '/path/to/repo'
+  end
+  
+  it "should render, commit, and push the `gh-pages' branch" do
+    @instance.expects(:render!)
+    @instance.index.expects(:commit!).with("Re-generated github pages")
     @instance.index.expects(:push!)
     
     @instance.release!

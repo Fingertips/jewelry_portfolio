@@ -25,8 +25,18 @@ class JewelryPortfolio
   
   def release!
     render!
-    @index.commit! "Updated github pages for: #{@spec.name}-#{@spec.version}"
+    @index.commit! commit_message
     @index.push!
+  end
+  
+  private
+  
+  def commit_message
+    if @spec
+      "Updated github pages for: #{@spec.name}-#{@spec.version}"
+    else
+      "Re-generated github pages"
+    end
   end
   
   class ReposIndex
