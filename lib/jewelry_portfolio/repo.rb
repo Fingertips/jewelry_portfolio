@@ -25,9 +25,9 @@ class JewelryPortfolio
     
     def initialize(account, spec = nil)
       @account = account
-      if @spec = spec
+      if spec
         %w{ name version summary description }.each do |attr|
-          send("#{attr}=", @spec.send(attr).to_s)
+          send("#{attr}=", spec.send(attr).to_s)
         end
       end
     end
@@ -54,7 +54,7 @@ class JewelryPortfolio
     end
     
     def ==(other)
-      other.is_a?(Repo) && @name == other.name
+      other.is_a?(Repo) && @name == other.name && @version == other.version
     end
   end
 end

@@ -27,6 +27,30 @@ module SharedRepoSpecs
         @repo.clone_url.should == 'git://github.com/alloy/dr-nic-magic-awesome.git'
       end
       
+      it "should be equal if the name and version match" do
+        other = JewelryPortfolio::Repo.new('alloy')
+        other.name = @repo.name
+        other.version = @repo.version
+        
+        @repo.should == other
+      end
+      
+      it "should not be equal if the name doesn't match" do
+        other = JewelryPortfolio::Repo.new('alloy')
+        other.name = 'other-gem'
+        other.version = @repo.version
+        
+        @repo.should.not == other
+      end
+      
+      it "should not be equal if the version doesn't match" do
+        other = JewelryPortfolio::Repo.new('alloy')
+        other.name = @repo.name
+        other.version = '9.9.9'
+        
+        @repo.should.not == other
+      end
+      
       it "should return itself serialized as YAML" do
         loaded_repo = YAML.load(@repo.to_yaml)
         
@@ -49,17 +73,6 @@ describe "JewelryPortfolio::Repo, when initialized without a gemspec" do
   end
   
   include SharedRepoSpecs
-  
-  it "should be equal if the gem name matches" do
-    a, b = Array.new(2) { JewelryPortfolio::Repo.new('alloy') }
-    
-    a.name = 'dr-nic-magic-awesome'
-    b.name = 'dr-nic-magic-awesome'
-    a.should == b
-    
-    b.name = 'microgem'
-    a.should.not == b
-  end
 end
 
 describe "JewelryPortfolio::Repo, when initialized with a gemspec" do
@@ -76,13 +89,5 @@ describe "JewelryPortfolio::Repo, when initialized with a gemspec" do
   
   it "should return the gem install command" do
     @repo.gem_install_command.should == "sudo gem install #{@repo.gem_name} -s http://gems.github.com"
-  end
-  
-  it "should be equal if the gem name matches" do
-    JewelryPortfolio::Repo.new('alloy', fixture_eval('dr-nic-magic-awesome.gemspec_')).should ==
-      JewelryPortfolio::Repo.new('alloy', fixture_eval('dr-nic-magic-awesome.gemspec_'))
-    
-    JewelryPortfolio::Repo.new('alloy', fixture_eval('dr-nic-magic-awesome.gemspec_')).should.not ==
-      JewelryPortfolio::Repo.new('alloy', fixture_eval('microgem.gemspec_'))
   end
 end
