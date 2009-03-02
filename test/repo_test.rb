@@ -27,8 +27,13 @@ module SharedRepoSpecs
         @repo.clone_url.should == 'git://github.com/alloy/dr-nic-magic-awesome.git'
       end
       
-      xit "should return itself serialized as YAML" do
-        @repo.to_yaml.should == fixture_read('dr-nic-magic-awesome_repo.yml')
+      it "should return itself serialized as YAML" do
+        loaded_repo = YAML.load(@repo.to_yaml)
+        
+        loaded_repo.name.should == @repo.name
+        loaded_repo.version.should == @repo.version
+        loaded_repo.summary.should == @repo.summary
+        loaded_repo.description.should == @repo.description
       end
     end
   end
