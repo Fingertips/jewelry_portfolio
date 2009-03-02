@@ -1,18 +1,19 @@
 require File.expand_path('../test_helper', __FILE__)
 
 class GemSpecMock
-  attr_accessor :name, :description
+  attr_accessor :name, :version, :description, :summary
   
-  def initialize(name, description)
-    @name, @description = name, description
+  def initialize(name, version, description)
+    @name, @version, @description = name, version, description
+    @summary = @description
   end
 end
 
 describe "JewelryPortfolio::Template" do
   before do
     @repos = [
-      JewelryPortfolio::Repo.new(GemSpecMock.new('dr-nic-magic-awesome', "Magically fix your projects overnight!"), 'alloy'),
-      JewelryPortfolio::Repo.new(GemSpecMock.new('microgem', "MicroGem provides a simple naive replacement for the `gem install' command in the form of the `mgem' commandline utility."), 'alloy')
+      JewelryPortfolio::Repo.new('alloy', GemSpecMock.new('dr-nic-magic-awesome', '1.0.0', "Magically fix your projects overnight!")),
+      JewelryPortfolio::Repo.new('alloy', GemSpecMock.new('microgem', '0.2.0', "MicroGem provides a simple naive replacement for the `gem install' command in the form of the `mgem' commandline utility."))
     ]
     
     @page = JewelryPortfolio::Template.new(fixture('template'), @repos)
@@ -47,7 +48,7 @@ describe "JewelryPortfolio::Template" do
   end
   
   it "should render an ERB partial with the specified local variables" do
-    @page.partial('repo', :repo => @repos.first, :spec => @repos.first.spec).should ==
+    @page.partial('repo', :repo => @repos.first).should ==
       File.read(fixture('dr-nic-magic-awesome.html'))
   end
   

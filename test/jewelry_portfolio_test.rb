@@ -26,7 +26,7 @@ describe "JewelryPortfolio" do
   it "should return the local pages repos index" do
     index = @portfolio.index
     index.should.be.instance_of JewelryPortfolio::ReposIndex
-    index.repos.map { |r| r.spec.name }.should == %w{ dr-nic-magic-awesome microgem }
+    index.repos.map { |r| r.name }.should == %w{ dr-nic-magic-awesome microgem }
   end
   
   it "should return the template" do

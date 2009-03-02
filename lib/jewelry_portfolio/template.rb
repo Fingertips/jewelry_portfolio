@@ -44,7 +44,7 @@ class JewelryPortfolio
     #
     # See partial for more info.
     def repo_partial(repo, local_variables = {})
-      partial 'repo', local_variables.merge(:repo => repo, :spec => repo.spec)
+      partial 'repo', local_variables.merge(:repo => repo)
     end
     
     private
