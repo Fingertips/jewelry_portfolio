@@ -59,3 +59,15 @@ describe "JewelryPortfolio::Tasks" do
     @tasks_helper.namespaces[:portfolio].tasks[:release].call
   end
 end
+
+describe "JewelryPortfolio::Tasks, in general" do
+  before do
+    @tasks_helper = JewelryPortfolio::Tasks.new
+    @tasks_helper.stubs(:portfolio).returns(stub('JewelryPortfolio instance'))
+  end
+  
+  it "should retrieve the account name to use from the local/global git config" do
+    Git.expects(:open).with('.').returns(stub('Git config', :config => { 'github.user' => 'joe_the_plumber' }))
+    @tasks_helper.account.should == 'joe_the_plumber'
+  end
+end

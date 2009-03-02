@@ -24,13 +24,17 @@ class JewelryPortfolio
     #   end
     def initialize
       yield self if block_given?
-      
-      @account ||= github_username
-      unless @account
-        raise ArgumentError, "Unable to determine `account'. Add a github user entry to your global, or local, git config. Or explicitely set the `account' on the JewelryPortfolio::Tasks instance."
-      end
-      
       define
+    end
+    
+    def account
+      unless @account
+        @account = github_username
+        unless @account
+          raise ArgumentError, "Unable to determine `account'. Add a github user entry to your global, or local, git config. Or explicitely set the `account' on the JewelryPortfolio::Tasks instance."
+        end
+      end
+      @account
     end
     
     private
