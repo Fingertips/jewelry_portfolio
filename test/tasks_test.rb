@@ -66,8 +66,19 @@ describe "JewelryPortfolio::Tasks, in general" do
     @tasks_helper.stubs(:portfolio).returns(stub('JewelryPortfolio instance'))
   end
   
-  it "should retrieve the account name to use from the local/global git config" do
+  it "should yield itself when initializing" do
+    yielded_instance = nil
+    returned_instance = JewelryPortfolio::Tasks.new { |t| yielded_instance = t }
+    returned_instance.should.be yielded_instance
+  end
+  
+  it "should return the account name to use from the local/global git config if the user didn't specify one" do
     Git.expects(:open).with('.').returns(stub('Git config', :config => { 'github.user' => 'joe_the_plumber' }))
+    @tasks_helper.account.should == 'joe_the_plumber'
+  end
+  
+  it "should return the account explicitely defined by the user" do
+    @tasks_helper.account = 'joe_the_plumber'
     @tasks_helper.account.should == 'joe_the_plumber'
   end
 end
