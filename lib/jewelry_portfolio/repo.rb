@@ -26,10 +26,16 @@ class JewelryPortfolio
     def initialize(account, spec = nil)
       @account = account
       if spec
+        @gem = true
         %w{ name version summary description }.each do |attr|
           send("#{attr}=", spec.send(attr).to_s)
         end
       end
+    end
+    
+    # Returns whether or not there's a Ruby gem for this repo.
+    def gem?
+      @gem
     end
     
     # Returns the URL to the project page on GitHub.
