@@ -88,4 +88,23 @@ describe "JewelryPortfolio::Tasks, in general" do
       @tasks_helper.account
     }.should.raise ArgumentError
   end
+  
+  it "should try to find a gemspec file in the current work directory and return a JewelryPortfolio instance with that spec" do
+    @tasks_helper = JewelryPortfolio::Tasks.new
+    @tasks_helper.account = 'alloy'
+    
+    Dir.expects(:glob).with('*.gemspec').returns([fixture('dr-nic-magic-awesome.gemspec_')])
+    JewelryPortfolio.expects(:new).with('alloy', fixture_eval('dr-nic-magic-awesome.gemspec_')).returns('JewelryPortfolio')
+    @tasks_helper.portfolio.should == 'JewelryPortfolio'
+  end
+  
+  it "should return a JewelryPortfolio instance without spec if none was found in the current work directory" do
+    @tasks_helper = JewelryPortfolio::Tasks.new
+    @tasks_helper.account = 'alloy'
+    
+    Dir.stubs(:glob).with('*.gemspec').returns([])
+    
+    JewelryPortfolio.expects(:new).with('alloy', nil).returns('JewelryPortfolio')
+    @tasks_helper.portfolio.should == 'JewelryPortfolio'
+  end
 end

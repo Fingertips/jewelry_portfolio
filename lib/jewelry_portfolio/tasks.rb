@@ -35,8 +35,6 @@ class JewelryPortfolio
       @account
     end
     
-    private
-    
     def define
       namespace :portfolio do
         desc "Generate the HTML"
