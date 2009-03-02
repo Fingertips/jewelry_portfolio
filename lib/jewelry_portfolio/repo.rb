@@ -1,14 +1,35 @@
 class JewelryPortfolio
   class Repo
-    attr_accessor :spec, :account
+    # The GitHub user account that this repo belongs to.
+    attr_accessor :account
     
-    def initialize(spec, account)
-      @spec, @account = spec, account
-    end
+    # The name of the repo.
+    #
+    # Not needed when initialized with a Gem::Specification.
+    attr_accessor :name
     
-    # Returns the name of the gem.
-    def name
-      @spec.name
+    # The version of the current version of the project.
+    #
+    # Not needed when initialized with a Gem::Specification.
+    attr_accessor :version
+    
+    # The summary of the project.
+    #
+    # Not needed when initialized with a Gem::Specification.
+    attr_accessor :summary
+    
+    # The description of the project.
+    #
+    # Not needed when initialized with a Gem::Specification.
+    attr_accessor :description
+    
+    def initialize(account, spec = nil)
+      @account = account
+      if @spec = spec
+        %w{ name version summary description }.each do |attr|
+          send("#{attr}=", @spec.send(attr).to_s)
+        end
+      end
     end
     
     # Returns the URL to the project page on GitHub.
@@ -24,7 +45,7 @@ class JewelryPortfolio
     # Returns the name of the gem file from GitHub, which is made up of the
     # account name and the gem name.
     def gem_name
-      "#{@account}-#{name}"
+      "#{@account}-#{@name}"
     end
     
     # Returns the command to install the gem. This is a helper for your views.
@@ -33,11 +54,7 @@ class JewelryPortfolio
     end
     
     def ==(other)
-      other.is_a?(Repo) && name == other.name
-    end
-    
-    def inspect
-      "#<#{self.class.name} name=\"#{name}\">"
+      other.is_a?(Repo) && @name == other.name
     end
   end
 end

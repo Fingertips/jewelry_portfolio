@@ -5,7 +5,8 @@ Gem::Specification.new do |spec|
   spec.author = 'John Barnette'
   spec.email = 'jbarnette@example.com'
   
-  spec.description = spec.summary = %{ Magically fix your projects overnight! }
+  spec.summary = %{ Magically fix your projects overnight! }
+  spec.description = %{ A gem which summons Dr. Nic to fix all your projects while you are cuddled underneath your blankie. }
   
   spec.files = Dir['lib/**/*.rb', 'bin/*', '[A-Z]*', 'test/**/*']
   
