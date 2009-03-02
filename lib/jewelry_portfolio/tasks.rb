@@ -28,11 +28,9 @@ class JewelryPortfolio
     end
     
     def account
+      @account ||= github_username
       unless @account
-        @account = github_username
-        unless @account
-          raise ArgumentError, "Unable to determine `account'. Add a github user entry to your global, or local, git config. Or explicitely set the `account' on the JewelryPortfolio::Tasks instance."
-        end
+        raise ArgumentError, "Unable to determine `account'. Add a github user entry to your global, or local, git config. Or explicitely set the `account' on the JewelryPortfolio::Tasks instance."
       end
       @account
     end

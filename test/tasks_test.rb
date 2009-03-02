@@ -81,4 +81,11 @@ describe "JewelryPortfolio::Tasks, in general" do
     @tasks_helper.account = 'joe_the_plumber'
     @tasks_helper.account.should == 'joe_the_plumber'
   end
+  
+  it "should raise an ArgumentError if no account could be resolved" do
+    Git.expects(:open).with('.').returns(stub('Git config', :config => {}))
+    lambda {
+      @tasks_helper.account
+    }.should.raise ArgumentError
+  end
 end
