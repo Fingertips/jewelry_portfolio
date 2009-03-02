@@ -95,25 +95,25 @@ describe "JewelryPortfolio::ReposIndex, when working with a pages repo" do
     repo.should.be.instance_of Git::Base
   end
   
-  it "should return an array of specs" do
+  xit "should return an array of specs" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
     
     @index.specs.each { |s| s.should.be.instance_of Gem::Specification }
     @index.specs.map { |s| s.name }.should == %w{ dr-nic-magic-awesome microgem }
   end
   
-  it "should return an empty array if the repos.yml file does not exist yet" do
+  it "should return an empty set if the repos.yml file does not exist yet" do
     FileUtils.rm(@index.repos_file)
-    @index.specs.should == []
+    @index.repos.should == Set.new
   end
   
-  it "should return an array of repos with their gemspecs" do
+  it "should return a set of repos with their gemspecs" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
     
     @index.repos.should == [
-      JewelryPortfolio::Repo.new(fixture_eval('dr-nic-magic-awesome.gemspec_'), 'alloy'),
-      JewelryPortfolio::Repo.new(fixture_eval('microgem.gemspec_'), 'alloy')
-    ]
+      JewelryPortfolio::Repo.new('alloy', fixture_eval('dr-nic-magic-awesome.gemspec_')),
+      JewelryPortfolio::Repo.new('alloy', fixture_eval('microgem.gemspec_'))
+    ].to_set
   end
   
   xit "should serialize the array of repos as YAML" do

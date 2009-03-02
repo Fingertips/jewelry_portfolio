@@ -27,28 +27,24 @@ module SharedRepoSpecs
         @repo.clone_url.should == 'git://github.com/alloy/dr-nic-magic-awesome.git'
       end
       
-      it "should be equal if the name and version match" do
+      it "should return a custom #hash" do
+        @repo.hash.should == 'dr-nic-magic-awesome'.hash
+      end
+      
+      it "should be equal if the name is equal" do
         other = JewelryPortfolio::Repo.new('alloy')
         other.name = @repo.name
-        other.version = @repo.version
         
         @repo.should == other
+        @repo.should.eql other
       end
       
       it "should not be equal if the name doesn't match" do
         other = JewelryPortfolio::Repo.new('alloy')
         other.name = 'other-gem'
-        other.version = @repo.version
         
         @repo.should.not == other
-      end
-      
-      it "should not be equal if the version doesn't match" do
-        other = JewelryPortfolio::Repo.new('alloy')
-        other.name = @repo.name
-        other.version = '9.9.9'
-        
-        @repo.should.not == other
+        @repo.should.not.eql other
       end
       
       it "should return itself serialized as YAML" do

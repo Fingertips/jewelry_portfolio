@@ -1,5 +1,6 @@
 require 'git'
 require 'rubygems/specification'
+require 'set'
 require 'tempfile'
 require 'yaml'
 
@@ -32,24 +33,16 @@ class JewelryPortfolio
       File.join(path, 'repos.yml')
     end
     
-    def specs
-      unless @specs
-        load_pages_repo!
-        @specs = File.exist?(repos_file) ? YAML.load(File.read(repos_file)) : []
-      end
-      @specs
-    end
-    
     def repos
-      specs.map { |spec| Repo.new(spec, @account) }
+      unless @repos
+        load_pages_repo!
+        @repos = File.exist?(repos_file) ? YAML.load(File.read(repos_file)).to_set : Set.new
+      end
+      @repos
     end
     
     def add(spec)
-      if old_spec = specs.find { |s| s.name == spec.name }
-        specs[specs.index(old_spec)] = spec
-      else
-        specs << spec
-      end
+      @repos = [Repo.new(@account, spec)].to_set.merge(@repos)
       update_repos_file!
     end
     
@@ -64,7 +57,7 @@ class JewelryPortfolio
     end
     
     def to_yaml
-      specs.to_yaml
+      repos.to_a.to_yaml
     end
     
     private

@@ -59,8 +59,13 @@ class JewelryPortfolio
       "sudo gem install #{gem_name} -s http://gems.github.com"
     end
     
-    def ==(other)
-      other.is_a?(Repo) && @name == other.name && @version == other.version
+    def hash
+      @name.hash
     end
+    
+    def ==(other)
+      other.is_a?(Repo) && hash == other.hash
+    end
+    alias_method :eql?, :==
   end
 end
