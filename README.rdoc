@@ -24,9 +24,20 @@ http://github.com/alloy/alloy.github.com/tree/master</em>):
 
     require 'jewelry_portfolio/tasks'
     JewelryPortfolio::Tasks.new do |t|
-      # Only specify the account if it's different from `github.user' in the git config.
-      t.account = 'Fingertips'
+      t.account     = 'Fingertips'
+      t.name        = 'passengerpane'
+      t.version     = '1.2.0'
+      t.summary     = 'A short summary about the project.'
+      t.description = 'A longer description about the project.'
     end
+
+  The +account+ is only necessary when you haven't configured github.user in
+  the local or global git config. (For more info see:
+  http://github.com/guides/local-github-config.) Or if you want to override the
+  +account+ that was retrieved from the git config.
+  
+  The other attributes are only necessary when there's no gemspec file in the
+  work directory.
 
 * <b>template.html.erb:</b>
 
