@@ -13,6 +13,12 @@ describe "JewelryPortfolio" do
     @portfolio.stubs(:puts)
   end
   
+  it "should raise an ArgumentError if no account is given" do
+    lambda {
+      JewelryPortfolio.new(nil, @repo)
+    }.should.raise ArgumentError
+  end
+  
   it "should add the spec to the index" do
     JewelryPortfolio::ReposIndex.any_instance.expects(:add).with(@repo)
     JewelryPortfolio.new('alloy', @repo)
@@ -33,7 +39,7 @@ describe "JewelryPortfolio" do
     template = @portfolio.template
     template.should.be.instance_of JewelryPortfolio::Template
     template.template.should == File.join(@portfolio.index.path, 'template.html.erb')
-    template.repos.should == @portfolio.index.repos
+    template.repos.should == @portfolio.index.repos.to_a
   end
   
   it "should write out the template" do

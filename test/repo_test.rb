@@ -55,13 +55,27 @@ module SharedRepoSpecs
         loaded_repo.summary.should == @repo.summary
         loaded_repo.description.should == @repo.description
       end
+      
+      it "should be valid with all necessary attributes set" do
+        lambda { @repo.validate! }.should.not.raise
+      end
+      
+      it "should not be valid with any of its attributes missing" do
+        %w{ account name version summary description }.each do |attr|
+          repo = @repo.dup
+          repo.send("#{attr}=", nil)
+          
+          lambda { repo.validate! }.should.raise JewelryPortfolio::Repo::InvalidError
+        end
+      end
     end
   end
 end
 
 describe "JewelryPortfolio::Repo, when initialized without a gemspec" do
   before do
-    @repo = JewelryPortfolio::Repo.new('alloy')
+    @repo = JewelryPortfolio::Repo.new
+    @repo.account = 'alloy'
     @repo.name = 'dr-nic-magic-awesome'
     @repo.version = '1.0.0'
     @repo.summary = 'Magically fix your projects overnight!'

@@ -62,49 +62,39 @@ end
 
 describe "JewelryPortfolio::Tasks, in general" do
   before do
+    Git.stubs(:open).with('.').returns(stub('Git config', :config => { 'github.user' => 'joe_the_plumber' }))
+    
     @tasks_helper = JewelryPortfolio::Tasks.new
     @tasks_helper.stubs(:portfolio).returns(stub('JewelryPortfolio instance'))
   end
   
-  it "should yield itself when initializing" do
-    yielded_instance = nil
-    returned_instance = JewelryPortfolio::Tasks.new { |t| yielded_instance = t }
-    returned_instance.should.be yielded_instance
+  it "should yield a JewelryPortfolio::Repo when initializing" do
+    repo = nil
+    @tasks_helper = JewelryPortfolio::Tasks.new { |t| repo = t }
+    
+    repo.should.be.instance_of JewelryPortfolio::Repo
+    @tasks_helper.repo.should.be repo
   end
   
-  it "should return the account name to use from the local/global git config if the user didn't specify one" do
-    Git.expects(:open).with('.').returns(stub('Git config', :config => { 'github.user' => 'joe_the_plumber' }))
-    @tasks_helper.account.should == 'joe_the_plumber'
-  end
-  
-  it "should return the account explicitely defined by the user" do
-    @tasks_helper.account = 'joe_the_plumber'
-    @tasks_helper.account.should == 'joe_the_plumber'
+  it "should assign the account to use on the repo, from the local/global git config if the user didn't specify one" do
+    @tasks_helper.repo.account.should == 'joe_the_plumber'
   end
   
   it "should raise an ArgumentError if no account could be resolved" do
-    Git.expects(:open).with('.').returns(stub('Git config', :config => {}))
-    lambda {
-      @tasks_helper.account
-    }.should.raise ArgumentError
+    Git.stubs(:open).with('.').returns(stub('Git config', :config => {}))
+    @tasks_helper = JewelryPortfolio::Tasks.new
+    
+    lambda { @tasks_helper.portfolio }.should.raise ArgumentError
   end
   
   it "should try to find a gemspec file in the current work directory and return a JewelryPortfolio instance with that spec" do
-    @tasks_helper = JewelryPortfolio::Tasks.new
-    @tasks_helper.account = 'alloy'
-    
     Dir.expects(:glob).with('*.gemspec').returns([fixture('dr-nic-magic-awesome.gemspec_')])
-    JewelryPortfolio.expects(:new).with('alloy', fixture_eval('dr-nic-magic-awesome.gemspec_')).returns('JewelryPortfolio')
-    @tasks_helper.portfolio.should == 'JewelryPortfolio'
-  end
-  
-  it "should return a JewelryPortfolio instance without spec if none was found in the current work directory" do
     @tasks_helper = JewelryPortfolio::Tasks.new
-    @tasks_helper.account = 'alloy'
     
-    Dir.stubs(:glob).with('*.gemspec').returns([])
+    JewelryPortfolio.expects(:new).with('joe_the_plumber',
+      JewelryPortfolio::Repo.new('joe_the_plumber', fixture_eval('dr-nic-magic-awesome.gemspec_'))).
+        returns('JewelryPortfolio')
     
-    JewelryPortfolio.expects(:new).with('alloy', nil).returns('JewelryPortfolio')
     @tasks_helper.portfolio.should == 'JewelryPortfolio'
   end
 end

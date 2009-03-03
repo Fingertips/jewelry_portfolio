@@ -14,6 +14,8 @@ class JewelryPortfolio
   # your GitHub pages repo. In this case no fetching and merging will be
   # performed.
   def initialize(account, repo = nil)
+    raise ArgumentError, "No `account' given." unless account
+    
     @account  = account
     @repo     = repo
     @index    = ReposIndex.new(@account, (Dir.pwd unless @repo))

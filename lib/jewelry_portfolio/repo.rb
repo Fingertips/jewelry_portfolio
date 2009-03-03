@@ -1,5 +1,7 @@
 class JewelryPortfolio
   class Repo
+    class InvalidError < StandardError; end
+    
     # The GitHub user account that this repo belongs to.
     attr_accessor :account
     
@@ -23,7 +25,7 @@ class JewelryPortfolio
     # Not needed when initialized with a Gem::Specification.
     attr_accessor :description
     
-    def initialize(account, spec = nil)
+    def initialize(account = nil, spec = nil)
       @account = account
       @gem = !spec.nil?
       
@@ -56,6 +58,12 @@ class JewelryPortfolio
     # Returns the command to install the gem. This is a helper for your views.
     def gem_install_command
       "sudo gem install #{gem_name} -s http://gems.github.com"
+    end
+    
+    # Raises a JewelryPortfolio::Repo::InvalidError if any of: account, name,
+    # version, summary, or description is +nil+.
+    def validate!
+      raise InvalidError unless @account && @name && @version && @summary && @description
     end
     
     def hash
