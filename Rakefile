@@ -11,13 +11,14 @@ begin
     s.email = "eloy.de.enige@gmail.com"
     s.homepage = "http://github.com/alloy/repo_page_san"
     
-    s.summary = %Q{ An add-on for Jeweler for lazy developers who would like to showcase their jewelry portfolio on their GitHub pages. }
+    s.summary = %Q{ A template renderer, and rake tasks, for lazy developers who would like to showcase their jewelry portfolio (libraries) on their GitHub pages. }
     s.description = %{
-      Imagine writing an erb template once and use rake release to release
-      your gem with Jeweler as usual, but in addition re-generate and push the
-      index.html for your GitHub pages. If that sounds good to you, you're in luck.
-      Because that's exactly what this add-on for Jeweler does.
+      Imagine writing an erb template once and use rake portfolio:release to
+      generate and push the index.html for your GitHub pages. If that sounds
+      good to you, you're in luck. Because that's exactly what this gem does.
     }
+    
+    s.add_dependency('schacon-git', '>= 0')
   end
   
   begin

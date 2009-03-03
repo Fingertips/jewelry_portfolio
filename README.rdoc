@@ -6,8 +6,10 @@ GitHub pages.
 Imagine writing an erb template once and use <tt>rake release</tt> to release
 your gem with Jeweler as usual, but in addition re-generate and push the
 index.html for your GitHub pages. If that sounds good to you, you're in luck.
-Because that's exactly what this add-on for
-Jeweler[http://github.com/technicalpickles/jeweler/tree/master] does.
+Because that's exactly what this gem does.
+
+Note that JewelryPortfolio _can_ be used without Jeweler. Simply define all
+attributes as described in "GitHub pages repository: Rakefile"
 
 == Usage
 
@@ -18,7 +20,8 @@ already. See http://github.com/guides/pages for more info.
 
 Then create the following files, and content, in the master branch of your
 pages repository (<em>for a more elaborate example see:
-http://github.com/alloy/alloy.github.com/tree/master</em>):
+http://github.com/Fingertips/fingertips.github.com/tree/master, which
+creates the following: http://fingertips.github.com/</em>):
 
 * <b>Rakefile:</b>
 
@@ -87,7 +90,8 @@ release it.
 === Add super-cow powers to your project's Rakefile
 
 Update the Rakefile of the project that you would like to include in your
-jewelry portfolio like so:
+jewelry portfolio (<em>note that it isn't necessary to use Jeweler to be able
+to use JewelryPortfolio</em>) like so:
 
   begin
     require 'jeweler'
@@ -98,10 +102,7 @@ jewelry portfolio like so:
     # Add the following to your Rakefile to use JewelryPortfolio
     begin
       require 'jewelry_portfolio/tasks'
-      JewelryPortfolio::Tasks.new do |t|
-        # Only specify the account if it's different from `github.user' in the git config.
-        t.account = 'Fingertips'
-      end
+      JewelryPortfolio::Tasks.new
     rescue LoadError
       puts "JewelryPortfolio not available. Install it with: sudo gem install Fingertips-jewelry_portfolio -s http://gems.github.com"
     end
@@ -116,8 +117,6 @@ index.html will be re-generated and pushed to GitHub after releasing the gem.
 If you just want to re-generate, or release, the jewelry portfolio use the
 aforementioned <tt>portfolio:generate</tt> and <tt>portfolio:release</tt> rake
 tasks.
-
-Note that it isn't necessary to use Jeweler to be able to use JewelryPortfolio.
 
 == COPYRIGHT
 
