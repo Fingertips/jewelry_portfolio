@@ -10,12 +10,23 @@ end
 
 class JewelryPortfolio
   class Tasks
-    # The JewelryPortfolio::Repo instance. If a block is given to ::new, this
-    # instance will be yielded.
-    attr_reader :repo
+    # The GitHub user account that this repo belongs to.
+    attr_accessor :account
     
-    # Initialize the JewelryPortfolio rake tasks. A JewelryPortfolio::Repo is
-    # yielded so additional configuration can be performed.
+    # The name of the repo.
+    attr_accessor :name
+    
+    # The version of the current version of the project.
+    attr_accessor :version
+    
+    # The summary of the project.
+    attr_accessor :summary
+    
+    # The description of the project.
+    attr_accessor :description
+    
+    # Initialize the JewelryPortfolio rake tasks. The JewelryPortfolio::Tasks
+    # instance is yielded so additional configuration can be performed.
     #
     # If the repo you're working in does _not_ contain a +gemspec+ file, then
     # you'll need to assign all values to the Repo yourself.
@@ -28,8 +39,8 @@ class JewelryPortfolio
     #     t.description = 'A longer description about the project.'
     #   end
     def initialize
-      @repo = Repo.new(retrieve_github_username, retrieve_gemspec)
-      yield @repo if block_given?
+      @account = github_username
+      yield self if block_given?
       define
     end
     
@@ -51,24 +62,32 @@ class JewelryPortfolio
     end
     
     def portfolio
-      validate_account!
-      @portfolio ||= JewelryPortfolio.new(@repo.account, (@repo if @repo.valid?))
+      unless @account
+        raise ArgumentError, "Unable to determine `account'. Add a github user entry to your global, or local, git config. Or explicitely set the `account' on the JewelryPortfolio::Tasks instance."
+      end
+      @portfolio ||= JewelryPortfolio.new(@account, (repo if repo.valid?))
     end
     
-    def retrieve_gemspec
+    def repo
+      unless @repo
+        @repo = Repo.new(account, gemspec)
+        %w{ account name version summary description }.each do |attr|
+          if value = send(attr)
+            @repo.send("#{attr}=", send(attr))
+          end
+        end
+      end
+      @repo
+    end
+    
+    def gemspec
       if spec_file = Dir.glob('*.gemspec').first
         spec = eval(File.read(spec_file))
       end
     end
     
-    def retrieve_github_username
+    def github_username
       Git.open('.').config['github.user']
-    end
-    
-    def validate_account!
-      unless @repo.account
-        raise ArgumentError, "Unable to determine `account'. Add a github user entry to your global, or local, git config. Or explicitely set the `account' on the JewelryPortfolio::Tasks instance."
-      end
     end
   end
 end

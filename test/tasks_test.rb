@@ -68,16 +68,15 @@ describe "JewelryPortfolio::Tasks, in general" do
     @tasks_helper.stubs(:portfolio).returns(stub('JewelryPortfolio instance'))
   end
   
-  it "should yield a JewelryPortfolio::Repo when initializing" do
-    repo = nil
-    @tasks_helper = JewelryPortfolio::Tasks.new { |t| repo = t }
+  it "should yield itself when initializing" do
+    yielded_instance = nil
+    returned_instance = JewelryPortfolio::Tasks.new { |t| yielded_instance = t }
     
-    repo.should.be.instance_of JewelryPortfolio::Repo
-    @tasks_helper.repo.should.be repo
+    returned_instance.should.be yielded_instance
   end
   
-  it "should assign the account to use on the repo, from the local/global git config if the user didn't specify one" do
-    @tasks_helper.repo.account.should == 'joe_the_plumber'
+  it "should return the account to use from the local/global git config if the user didn't specify one" do
+    @tasks_helper.account.should == 'joe_the_plumber'
   end
   
   it "should raise an ArgumentError if no account could be resolved" do
