@@ -44,11 +44,12 @@ describe "JewelryPortfolio::ReposIndex, in general, when the user specified a wo
     @index.repos_file.should == File.join(@index.path, 'repos.yml')
   end
   
-  it "should not pull from the remote pages repo when opening the repo" do
+  it "should not clean, fetch, and merge from the remote pages repo when opening the repo" do
     @index.instance_variable_set("@pages_repo", nil)
     
     Git.expects(:open).with(@index.path)
     Git::Base.any_instance.expects(:pull).never
+    Git::Base.any_instance.expects(:checkout).never
     @index.pages_repo
   end
 end
@@ -76,15 +77,20 @@ describe "JewelryPortfolio::ReposIndex, when working with a pages repo" do
     File.should.exist File.join(TMP_PAGES_REPO, 'repos.yml')
   end
   
-  it "should not create a new checkout if it already exists, but fetch and merge" do
-    @index.pages_repo # make sure it exists
+  it "should not create a new checkout if it already exists, but clean, fetch and merge" do
+    @index.pages_repo
+    File.open(@index.repos_file, 'w') { |f| f << 'updated' }
+    
+    # set @pages_repo to nil so the repo is re-opened the next we access it
     @index.instance_variable_set("@pages_repo", nil)
     
     Git.expects(:clone).never
-    Git::Base.any_instance.expects(:checkout).with('master')
+    #Git::Base.any_instance.expects(:checkout).with('.')
     Git::Base.any_instance.expects(:fetch).with('origin')
     Git::Base.any_instance.expects(:merge).with('origin/master')
     @index.pages_repo
+    
+    File.read(@index.repos_file).should.not == 'updated'
   end
   
   it "should create and checkout the `master' branch" do
@@ -106,10 +112,11 @@ describe "JewelryPortfolio::ReposIndex, when working with a pages repo" do
   
   it "should return an empty set if the repos.yml file does not exist yet" do
     FileUtils.rm(@index.repos_file)
+    Git::Base.any_instance.stubs(:checkout)
     @index.repos.should == Set.new
   end
   
-  it "should return a set of repos with their gemspecs" do
+  it "should return a set of repos" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
     
     @index.repos.should == [
@@ -145,8 +152,10 @@ describe "JewelryPortfolio::ReposIndex, when working with a pages repo" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
     @index.repos # make sure its loaded
     
-    repo = JewelryPortfolio::Repo.new('alloy', eval(fixture_read('dr-nic-magic-awesome.gemspec_').
-                                                gsub('dr-nic-magic-awesome', 'dr-nic-magic-awesome-v2')))
+    spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_').
+                  gsub('dr-nic-magic-awesome', 'dr-nic-magic-awesome-v2'))
+    
+    repo = JewelryPortfolio::Repo.new('alloy', spec)
     
     assert_difference('repos_from_file.length', +1) do
       @index.add(repo)
@@ -159,7 +168,8 @@ describe "JewelryPortfolio::ReposIndex, when working with a pages repo" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
     @index.repos # make sure its loaded
     
-    repo = JewelryPortfolio::Repo.new('alloy', eval(fixture_read('dr-nic-magic-awesome.gemspec_').gsub('1.0.0', '1.1.1')))
+    spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_').gsub('1.0.0', '1.1.1'))
+    repo = JewelryPortfolio::Repo.new('alloy', spec)
     
     assert_no_difference('repos_from_file.length') do
       @index.add(repo)
@@ -170,8 +180,6 @@ describe "JewelryPortfolio::ReposIndex, when working with a pages repo" do
   
   it "should re-raise Git::GitExecuteErrors with the repo path prepended" do
     message = nil
-    @index.commit! 'clean'
-    
     begin
       @index.commit! 'error'
     rescue Git::GitExecuteError => e

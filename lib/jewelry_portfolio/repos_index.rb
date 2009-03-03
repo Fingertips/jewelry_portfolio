@@ -84,6 +84,7 @@ class JewelryPortfolio
         @pages_repo = Git.open(path)
         unless @custom_work_directory
           puts "Pulling `#{url}'"
+          @pages_repo.checkout('.')
           @pages_repo.checkout('master')
           @pages_repo.fetch('origin')
           @pages_repo.merge('origin/master')
