@@ -19,6 +19,14 @@ describe "JewelryPortfolio" do
     }.should.raise ArgumentError
   end
   
+  it "should raise a JewelryPortfolio::Repo::InvalidError if the given repo isn't valid" do
+    @repo.version = nil
+    
+    lambda {
+      JewelryPortfolio.new('alloy', @repo)
+    }.should.raise JewelryPortfolio::Repo::InvalidError
+  end
+  
   it "should add the spec to the index" do
     JewelryPortfolio::ReposIndex.any_instance.expects(:add).with(@repo)
     JewelryPortfolio.new('alloy', @repo)
