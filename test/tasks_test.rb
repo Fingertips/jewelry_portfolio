@@ -84,7 +84,7 @@ describe "JewelryPortfolio::Tasks, in general" do
     Git.stubs(:open).with('.').returns(stub('Git config', :config => {}))
     @tasks_helper = JewelryPortfolio::Tasks.new
     
-    lambda { @tasks_helper.portfolio }.should.raise ArgumentError
+    lambda { @tasks_helper.send(:portfolio) }.should.raise ArgumentError
   end
   
   it "should try to find a gemspec file in the current work directory and return a JewelryPortfolio instance with that spec" do
@@ -95,6 +95,14 @@ describe "JewelryPortfolio::Tasks, in general" do
       JewelryPortfolio::Repo.new('joe_the_plumber', fixture_eval('dr-nic-magic-awesome.gemspec_'))).
         returns('JewelryPortfolio')
     
-    @tasks_helper.portfolio.should == 'JewelryPortfolio'
+    @tasks_helper.send(:portfolio).should == 'JewelryPortfolio'
+  end
+  
+  it "should not pass the Repo instance if it's not valid" do
+    Dir.stubs(:glob).with('*.gemspec').returns([])
+    @tasks_helper = JewelryPortfolio::Tasks.new
+    
+    JewelryPortfolio.expects(:new).with('joe_the_plumber', nil).returns('JewelryPortfolio')
+    @tasks_helper.send(:portfolio).should == 'JewelryPortfolio'
   end
 end

@@ -16,9 +16,9 @@ Jeweler[http://github.com/technicalpickles/jeweler/tree/master] does.
 First things first; create a GitHub pages repository if you haven't done so
 already. See http://github.com/guides/pages for more info.
 
-Then create the following files, and content, in the gh-pages branch of your
+Then create the following files, and content, in the master branch of your
 pages repository (<em>for a more elaborate example see:
-http://github.com/alloy/alloy.github.com/tree/gh-pages</em>):
+http://github.com/alloy/alloy.github.com/tree/master</em>):
 
 * <b>Rakefile:</b>
 

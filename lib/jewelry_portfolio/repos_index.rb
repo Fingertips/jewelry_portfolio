@@ -36,7 +36,8 @@ class JewelryPortfolio
     def repos
       unless @repos
         load_pages_repo!
-        @repos = Set.new(File.exist?(repos_file) ? YAML.load(File.read(repos_file)) : [])
+        data = File.read(repos_file) if File.exist?(repos_file)
+        @repos = data.nil? || data.empty? ? Set.new : YAML.load(data).to_set
       end
       @repos
     end
@@ -52,8 +53,8 @@ class JewelryPortfolio
     end
     
     def push!
-      puts "Pushing branch `gh-pages' to remote `#{url}'"
-      reraise_with_path { pages_repo.push('origin', 'gh-pages') }
+      puts "Pushing branch `master' to remote `#{url}'"
+      reraise_with_path { pages_repo.push('origin', 'master') }
     end
     
     def to_yaml
@@ -83,9 +84,9 @@ class JewelryPortfolio
         @pages_repo = Git.open(path)
         unless @custom_work_directory
           puts "Pulling `#{url}'"
-          @pages_repo.checkout('gh-pages')
+          @pages_repo.checkout('master')
           @pages_repo.fetch('origin')
-          @pages_repo.merge('origin/gh-pages')
+          @pages_repo.merge('origin/master')
         end
       end
     end
@@ -94,8 +95,8 @@ class JewelryPortfolio
       reraise_with_path do
         puts "Cloning `#{url}'"
         @pages_repo = Git.clone(url, repo_name, :path => File.dirname(path))
-        @pages_repo.checkout('origin/gh-pages')
-        branch = @pages_repo.branch('gh-pages')
+        @pages_repo.checkout('origin/master')
+        branch = @pages_repo.branch('master')
         branch.create
         branch.checkout
       end

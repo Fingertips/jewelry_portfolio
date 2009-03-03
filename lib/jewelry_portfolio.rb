@@ -15,7 +15,7 @@ class JewelryPortfolio
   # performed.
   def initialize(account, repo = nil)
     raise ArgumentError, "No `account' given." unless account
-    repo.validate! if repo
+    raise ArgumentError, "No valid `repo' given." if repo && !repo.valid?
     
     @account  = account
     @repo     = repo

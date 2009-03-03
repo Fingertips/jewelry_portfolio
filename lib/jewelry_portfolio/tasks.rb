@@ -2,7 +2,7 @@ require 'jewelry_portfolio'
 
 # Add the JewelryPortfolio `portfolio:release' Rake task so it's ran after the
 # original `release' Rake task if it exists.
-if defined?(Rake) && Rake::Task['release']
+if defined?(Rake) && Rake::Task.task_defined?('release')
   task :release do
     Rake::Task['portfolio:release'].invoke
   end
@@ -33,11 +33,6 @@ class JewelryPortfolio
       define
     end
     
-    def portfolio
-      validate_account!
-      @portfolio ||= JewelryPortfolio.new(@repo.account, @repo)
-    end
-    
     private
     
     def define
@@ -53,6 +48,11 @@ class JewelryPortfolio
           portfolio.release!
         end
       end
+    end
+    
+    def portfolio
+      validate_account!
+      @portfolio ||= JewelryPortfolio.new(@repo.account, (@repo if @repo.valid?))
     end
     
     def retrieve_gemspec

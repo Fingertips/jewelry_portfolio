@@ -57,7 +57,7 @@ module SharedRepoSpecs
       end
       
       it "should be valid with all necessary attributes set" do
-        lambda { @repo.validate! }.should.not.raise
+        @repo.should.be.valid
       end
       
       it "should not be valid with any of its attributes missing" do
@@ -65,7 +65,7 @@ module SharedRepoSpecs
           repo = @repo.dup
           repo.send("#{attr}=", nil)
           
-          lambda { repo.validate! }.should.raise JewelryPortfolio::Repo::InvalidError
+          repo.should.not.be.valid
         end
       end
     end

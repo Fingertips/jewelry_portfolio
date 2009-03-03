@@ -62,8 +62,8 @@ class JewelryPortfolio
     
     # Raises a JewelryPortfolio::Repo::InvalidError if any of: account, name,
     # version, summary, or description is +nil+.
-    def validate!
-      raise InvalidError unless @account && @name && @version && @summary && @description
+    def valid?
+      @account && @name && @version && @summary && @description
     end
     
     def hash

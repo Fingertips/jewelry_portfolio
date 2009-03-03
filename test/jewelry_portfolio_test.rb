@@ -21,10 +21,9 @@ describe "JewelryPortfolio" do
   
   it "should raise a JewelryPortfolio::Repo::InvalidError if the given repo isn't valid" do
     @repo.version = nil
-    
     lambda {
       JewelryPortfolio.new('alloy', @repo)
-    }.should.raise JewelryPortfolio::Repo::InvalidError
+    }.should.raise ArgumentError
   end
   
   it "should add the spec to the index" do
@@ -55,7 +54,7 @@ describe "JewelryPortfolio" do
     File.read(File.join(@portfolio.index.path, 'index.html')).should == File.read(fixture('template.html'))
   end
   
-  it "should render, commit, and push the `gh-pages' branch" do
+  it "should render, commit, and push the master branch" do
     @portfolio.expects(:render!)
     @portfolio.index.expects(:commit!).with("Updated github pages for: dr-nic-magic-awesome-1.0.0")
     @portfolio.index.expects(:push!)
@@ -75,7 +74,7 @@ describe "JewelryPortfolio, with a custom work_directory" do
     @portfolio.index.instance_variable_get("@custom_work_directory").should == Dir.pwd
   end
   
-  it "should render, commit, and push the `gh-pages' branch" do
+  it "should render, commit, and push the master branch" do
     @portfolio.expects(:render!)
     @portfolio.index.expects(:commit!).with("Re-generated github pages")
     @portfolio.index.expects(:push!)

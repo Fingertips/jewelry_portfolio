@@ -72,22 +72,20 @@ describe "JewelryPortfolio::ReposIndex, when working with a pages repo" do
     File.should.exist File.join(TMP_PAGES_REPO, 'repos.yml')
   end
   
-  it "should not create a new checkout if it already exists, but do a pull" do
+  it "should not create a new checkout if it already exists, but fetch and merge" do
     @index.pages_repo # make sure it exists
     @index.instance_variable_set("@pages_repo", nil)
     
     Git.expects(:clone).never
-    Git::Base.any_instance.expects(:checkout).with('gh-pages')
+    Git::Base.any_instance.expects(:checkout).with('master')
     Git::Base.any_instance.expects(:fetch).with('origin')
-    Git::Base.any_instance.expects(:merge).with('origin/gh-pages')
+    Git::Base.any_instance.expects(:merge).with('origin/master')
     @index.pages_repo
   end
   
-  it "should create and checkout the `gh-pages' branch" do
+  it "should create and checkout the `master' branch" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
-    @index.pages_repo.branch('gh-pages').should.be.current
-    @index.pages_repo.config('branch.gh-pages.remote').should == 'origin'
-    @index.pages_repo.config('branch.gh-pages.merge').should == 'refs/heads/gh-pages'
+    @index.pages_repo.branch('master').should.be.current
   end
   
   it "should return the pages repo" do
@@ -120,8 +118,8 @@ describe "JewelryPortfolio::ReposIndex, when working with a pages repo" do
     @index.to_yaml.should == fixture_read('repos.yml')
   end
   
-  it "should push the `gh-pages' branch" do
-    @index.pages_repo.expects(:push).with('origin', 'gh-pages')
+  it "should push the to origin/master" do
+    @index.pages_repo.expects(:push).with('origin', 'master')
     @index.push!
   end
   
@@ -137,11 +135,6 @@ describe "JewelryPortfolio::ReposIndex, when working with a pages repo" do
       File.open(File.join(@index.path, 'foo'), 'w') { |f| f << 'foo' }
       @index.commit!('test commit')
     end
-  end
-  
-  it "should push the `gh-pages' branch" do
-    @index.pages_repo.expects(:push).with('origin', 'gh-pages')
-    @index.push!
   end
   
   it "should add a new repo to the repos.yml" do
