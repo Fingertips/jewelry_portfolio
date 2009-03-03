@@ -1,20 +1,9 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class GemSpecMock
-  attr_accessor :name, :version, :description, :summary
-  
-  def initialize(name, version, description)
-    @name, @version, @description = name, version, description
-    @summary = @description
-  end
-end
-
 describe "JewelryPortfolio::Template" do
   before do
-    @repos = [
-      JewelryPortfolio::Repo.new('alloy', GemSpecMock.new('dr-nic-magic-awesome', '1.0.0', "Magically fix your projects overnight!")),
-      JewelryPortfolio::Repo.new('alloy', GemSpecMock.new('microgem', '0.2.0', "MicroGem provides a simple naive replacement for the `gem install' command in the form of the `mgem' commandline utility."))
-    ]
+    @repos = %w{ dr-nic-magic-awesome.gemspec_ microgem.gemspec_ }.
+      map { |spec| JewelryPortfolio::Repo.new('alloy', fixture_eval(spec)) }
     
     @page = JewelryPortfolio::Template.new(fixture('template'), @repos)
   end
