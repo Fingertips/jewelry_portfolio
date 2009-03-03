@@ -3,3 +3,4 @@
 coverage
 test/tmp
 test/fixtures/alloy.github.com
+rdoc

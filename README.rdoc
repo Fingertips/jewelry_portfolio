@@ -1,4 +1,4 @@
-= JewelryPortfolio
+= Jewelry Portfolio
 
 Surely also lazy developers like to showcase their jewelry portfolio on their
 GitHub pages.
@@ -120,4 +120,4 @@ tasks.
 
 == COPYRIGHT
 
-Copyright (c) 2009 Fingertips, Eloy Duran. See LICENSE for details.
+Copyright © 2009 Fingertips, Eloy Duran. See LICENSE for details.
