@@ -7,15 +7,15 @@ describe "JewelryPortfolio" do
     JewelryPortfolio::ReposIndex.any_instance.stubs(:puts)
     FileUtils.rm_rf(TMP_PAGES_REPO)
     
-    @spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_'))
-    @portfolio = JewelryPortfolio.new('alloy', @spec)
+    @repo = JewelryPortfolio::Repo.new('alloy', eval(fixture_read('dr-nic-magic-awesome.gemspec_')))
+    @portfolio = JewelryPortfolio.new('alloy', @repo)
     
     @portfolio.stubs(:puts)
   end
   
   it "should add the spec to the index" do
-    JewelryPortfolio::ReposIndex.any_instance.expects(:add).with(@spec)
-    JewelryPortfolio.new('alloy', @spec)
+    JewelryPortfolio::ReposIndex.any_instance.expects(:add).with(@repo)
+    JewelryPortfolio.new('alloy', @repo)
   end
   
   it "should also initialize without gemspec" do

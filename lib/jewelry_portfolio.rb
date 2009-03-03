@@ -5,7 +5,7 @@ require 'jewelry_portfolio/template'
 class JewelryPortfolio
   class FileMissingError < StandardError; end
   
-  attr_reader :account, :spec, :index, :template
+  attr_reader :account, :repo, :index, :template
   
   # Initializes a JewelryPortfolio instance for the specified +account+.
   #
@@ -13,13 +13,13 @@ class JewelryPortfolio
   # index. If no +spec+ is provided it is assumed you are working in a clone of
   # your GitHub pages repo. In this case no fetching and merging will be
   # performed.
-  def initialize(account, spec = nil)
+  def initialize(account, repo = nil)
     @account  = account
-    @spec     = spec
-    @index    = ReposIndex.new(@account, (Dir.pwd unless @spec))
+    @repo     = repo
+    @index    = ReposIndex.new(@account, (Dir.pwd unless @repo))
     @template = Template.new(File.join(@index.path, 'template'), @index.repos)
     
-    @index.add(@spec) if @spec
+    @index.add(@repo) if @repo
   end
   
   # Renders the index.html file.
@@ -38,8 +38,8 @@ class JewelryPortfolio
   private
   
   def commit_message
-    if @spec
-      "Updated github pages for: #{@spec.name}-#{@spec.version}"
+    if @repo
+      "Updated github pages for: #{@repo.name}-#{@repo.version}"
     else
       "Re-generated github pages"
     end

@@ -36,13 +36,13 @@ class JewelryPortfolio
     def repos
       unless @repos
         load_pages_repo!
-        @repos = File.exist?(repos_file) ? YAML.load(File.read(repos_file)).to_set : Set.new
+        @repos = Set.new(File.exist?(repos_file) ? YAML.load(File.read(repos_file)) : [])
       end
       @repos
     end
     
-    def add(spec)
-      @repos = [Repo.new(@account, spec)].to_set.merge(@repos)
+    def add(repo)
+      @repos = Set.new([repo]).merge(@repos)
       update_repos_file!
     end
     

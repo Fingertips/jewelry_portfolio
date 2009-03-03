@@ -144,15 +144,15 @@ describe "JewelryPortfolio::ReposIndex, when working with a pages repo" do
     @index.push!
   end
   
-  it "should add a new spec to the repos.yml" do
+  it "should add a new repo to the repos.yml" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
     @index.repos # make sure its loaded
     
-    spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_').
-      gsub('dr-nic-magic-awesome', 'dr-nic-magic-awesome-v2'))
+    repo = JewelryPortfolio::Repo.new('alloy', eval(fixture_read('dr-nic-magic-awesome.gemspec_').
+                                                gsub('dr-nic-magic-awesome', 'dr-nic-magic-awesome-v2')))
     
     assert_difference('repos_from_file.length', +1) do
-      @index.add(spec)
+      @index.add(repo)
     end
     
     repos_from_file.last.name.should == 'dr-nic-magic-awesome-v2'
@@ -162,10 +162,10 @@ describe "JewelryPortfolio::ReposIndex, when working with a pages repo" do
     FileUtils.rm_rf(TMP_PAGES_REPO)
     @index.repos # make sure its loaded
     
-    spec = eval(fixture_read('dr-nic-magic-awesome.gemspec_').gsub('1.0.0', '1.1.1'))
+    repo = JewelryPortfolio::Repo.new('alloy', eval(fixture_read('dr-nic-magic-awesome.gemspec_').gsub('1.0.0', '1.1.1')))
     
     assert_no_difference('repos_from_file.length') do
-      @index.add(spec)
+      @index.add(repo)
     end
     
     repos_from_file.first.version.to_s.should == '1.1.1'
