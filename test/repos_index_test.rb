@@ -13,6 +13,10 @@ describe "JewelryPortfolio::ReposIndex, in general" do
     @index.repo_name.should == 'alloy.github.com.git'
   end
   
+  it "should downcase all characters in the repo name" do
+    JewelryPortfolio::ReposIndex.new('Fingertips').repo_name.should == 'fingertips.github.com.git'
+  end
+  
   it "should return the url to the pages repo" do
     @index.url.should == "git@github.com:alloy/alloy.github.com.git"
   end

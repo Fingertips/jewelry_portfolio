@@ -21,7 +21,7 @@ class JewelryPortfolio
     end
     
     def repo_name
-      @repo_name ||= "#{@account}.github.com.git"
+      @repo_name ||= "#{@account.downcase}.github.com.git"
     end
     
     def pages_repo
