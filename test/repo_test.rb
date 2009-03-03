@@ -71,7 +71,7 @@ describe "JewelryPortfolio::Repo, when initialized without a gemspec" do
   include SharedRepoSpecs
   
   it "should return that there's _no_ a gem for the repo" do
-    @repo.should.not.be.gem
+    @repo.gem?.should.be false
   end
 end
 
@@ -84,7 +84,7 @@ describe "JewelryPortfolio::Repo, when initialized with a gemspec" do
   include SharedRepoSpecs
   
   it "should return that there's a gem for the repo" do
-    @repo.should.be.gem
+    @repo.gem?.should.be true
   end
   
   it "should return the gem name" do

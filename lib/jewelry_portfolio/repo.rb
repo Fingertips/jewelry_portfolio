@@ -25,12 +25,11 @@ class JewelryPortfolio
     
     def initialize(account, spec = nil)
       @account = account
-      if spec
-        @gem = true
-        %w{ name version summary description }.each do |attr|
-          send("#{attr}=", spec.send(attr).to_s)
-        end
-      end
+      @gem = !spec.nil?
+      
+      %w{ name version summary description }.each do |attr|
+        send("#{attr}=", spec.send(attr).to_s)
+      end if spec
     end
     
     # Returns whether or not there's a Ruby gem for this repo.
