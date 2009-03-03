@@ -9,8 +9,8 @@ class JewelryPortfolio
   
   # Initializes a JewelryPortfolio instance for the specified +account+.
   #
-  # If an optional +spec+ is provided it will be added to, or updated in, the
-  # index. If no +spec+ is provided it is assumed you are working in a clone of
+  # If an optional +repo+ is provided it will be added to, or updated in, the
+  # index. If no +repo+ is provided it is assumed you are working in a clone of
   # your GitHub pages repo. In this case no fetching and merging will be
   # performed.
   def initialize(account, repo = nil)

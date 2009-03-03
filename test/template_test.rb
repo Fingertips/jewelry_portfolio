@@ -5,7 +5,11 @@ describe "JewelryPortfolio::Template" do
     @repos = %w{ dr-nic-magic-awesome.gemspec_ microgem.gemspec_ }.
       map { |spec| JewelryPortfolio::Repo.new('alloy', fixture_eval(spec)) }
     
-    @page = JewelryPortfolio::Template.new(fixture('template'), @repos)
+    @page = JewelryPortfolio::Template.new(fixture('template'), @repos.to_set)
+  end
+  
+  it "should turn the repos set into an array" do
+    @page.repos.should.be.instance_of Array
   end
   
   it "should raise a JewelryPortfolio::FileMissingError if the specified template does not exist" do

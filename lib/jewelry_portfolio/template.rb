@@ -3,7 +3,14 @@ require 'erb'
 class JewelryPortfolio
   # This class is responsible for rendering a template.
   class Template
-    attr_reader :template, :repos, :view_path
+    # The full path to the template file.
+    attr_reader :template
+    
+    # The directory in which the template resides.
+    attr_reader :view_path
+    
+    # The array of JewelryPortfolio::Repo instances.
+    attr_reader :repos
     
     # Initialize with the path to the +template+, minus the extensions, and an
     # array of JewelryPortfolio::Repo instances as +repos+.
@@ -11,7 +18,7 @@ class JewelryPortfolio
       template   = File.expand_path(template)
       @view_path = File.dirname(template)
       @template  = html_template_file(File.basename(template))
-      @repos     = repos
+      @repos     = repos.to_a
     end
     
     # Renders the template and returns the output.
