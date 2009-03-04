@@ -5,6 +5,7 @@
   gem: true
   name: dr-nic-magic-awesome
   summary: Magically fix your projects overnight!
+  updated_at: 2009-03-04 00:00:00 Z
   version: 1.0.0
 - !ruby/object:JewelryPortfolio::Repo 
   account: alloy
@@ -12,4 +13,5 @@
   gem: true
   name: microgem
   summary: MicroGem provides a simple naive replacement for the `gem install' command in the form of the `mgem' commandline utility.
+  updated_at: 2009-03-04 00:00:00 Z
   version: 0.2.0

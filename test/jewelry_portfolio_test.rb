@@ -46,14 +46,14 @@ describe "JewelryPortfolio" do
     template = @portfolio.html_template
     template.should.be.instance_of JewelryPortfolio::Template::HTML
     template.file.should == File.join(@portfolio.index.path, 'template.html.erb')
-    template.repos.should == @portfolio.index.repos.to_a
+    template.repos.should == @portfolio.index.repos.to_a.sort_by { |r| r.name }
   end
   
   it "should return the feed template" do
     template = @portfolio.feed_template
     template.should.be.instance_of JewelryPortfolio::Template::Feed
     template.file.should == File.join(@portfolio.index.path, 'feed.xml.builder')
-    template.repos.should == @portfolio.index.repos.to_a
+    template.repos.should == @portfolio.index.repos.to_a.sort
   end
   
   it "should write out the template and feed" do

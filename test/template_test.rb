@@ -22,10 +22,6 @@ module SharedTemplateSpecs
         @template.file.should == @file
       end
       
-      it "should return the repos" do
-        @template.repos.should == @repos
-      end
-      
       it "should return the view_path" do
         @template.view_path.should == FIXTURE_PATH
       end
@@ -46,11 +42,15 @@ describe "JewelryPortfolio::Template::HTML" do
   
   it "should render with the specified gem repos available as `repos'" do
     File.stubs(:read).returns('<%= repos.inspect %>')
-    @template.render.should == @repos.inspect
+    @template.render.should == @repos.sort_by { |r| r.name }.inspect
   end
   
   it "should render the ERB template" do
     @template.render.should == File.read(fixture('template.html'))
+  end
+  
+  it "should return the repos ordered by name" do
+    @template.repos.should == @repos.sort_by { |r| r.name }
   end
 end
 
@@ -71,5 +71,27 @@ describe "JewelryPortfolio::Template::Feed" do
     expected = File.read(fixture('feed.xml')).gsub('TIME_NOW', time.iso8601)
     
     @template.render.should == expected
+  end
+  
+  it "should return the repos ordered by updated_at" do
+    repos = @template.repos
+    
+    repos.last.stubs(:updated_at).returns(Time.now)
+    sleep 1.1
+    repos.first.stubs(:updated_at).returns(Time.now)
+    
+    @template.repos.should == @repos.sort
+  end
+  
+  it "should return the repos ordered by version if updated_at is the same" do
+    repos = @template.repos
+    time = Time.now
+    
+    repos.each { |r| r.stubs(:updated_at).returns(time) }
+    
+    repos.first.version = '0.11.45'
+    repos.last.version = '1.2.3'
+    
+    @template.repos.should == @repos.sort
   end
 end

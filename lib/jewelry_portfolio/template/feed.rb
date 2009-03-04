@@ -5,9 +5,17 @@ class JewelryPortfolio
   class Template
     # This class is responsible for rendering a HTML template.
     class Feed < Template
+      # The Builder::XmlMarkup instance.
       attr_reader :xml
       
-      # Renders the HTML and returns the output.0
+      # Returns the repos ordered by +updated_at+ then +version+.
+      #
+      # See JewelryPortfolio::Repo#<=>
+      def repos
+        super.sort
+      end
+      
+      # Renders the HTML and returns the output.
       def render(&block)
         output = ''
         

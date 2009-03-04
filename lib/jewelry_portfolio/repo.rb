@@ -78,6 +78,14 @@ class JewelryPortfolio
       @name.hash
     end
     
+    def <=>(other)
+      if (res = @updated_at <=> other.updated_at) != 0
+        res
+      else
+        @version.split('.') <=> other.version.split('.')
+      end
+    end
+    
     def ==(other)
       other.is_a?(Repo) && hash == other.hash
     end
