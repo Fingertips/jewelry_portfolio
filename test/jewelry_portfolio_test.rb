@@ -42,16 +42,28 @@ describe "JewelryPortfolio" do
     index.repos.map { |r| r.name }.should == %w{ dr-nic-magic-awesome microgem }
   end
   
-  it "should return the template" do
-    template = @portfolio.template
+  it "should return the html template" do
+    template = @portfolio.html_template
     template.should.be.instance_of JewelryPortfolio::Template::HTML
     template.file.should == File.join(@portfolio.index.path, 'template.html.erb')
     template.repos.should == @portfolio.index.repos.to_a
   end
   
-  it "should write out the template" do
+  it "should return the feed template" do
+    template = @portfolio.feed_template
+    template.should.be.instance_of JewelryPortfolio::Template::Feed
+    template.file.should == File.join(@portfolio.index.path, 'feed.xml.builder')
+    template.repos.should == @portfolio.index.repos.to_a
+  end
+  
+  it "should write out the template and feed" do
+    time = Time.now
+    Time.stubs(:now).returns(time)
+    expected_feed = File.read(fixture('feed.xml')).gsub('TIME_NOW', time.iso8601)
+    
     @portfolio.render!
     File.read(File.join(@portfolio.index.path, 'index.html')).should == File.read(fixture('template.html'))
+    File.read(File.join(@portfolio.index.path, 'feed.xml')).should == expected_feed
   end
   
   it "should render, commit, and push the master branch" do
@@ -67,6 +79,8 @@ describe "JewelryPortfolio, with a custom work_directory" do
   before do
     JewelryPortfolio::ReposIndex.any_instance.stubs(:load_pages_repo!)
     JewelryPortfolio::Template::HTML.stubs(:new)
+    JewelryPortfolio::Template::Feed.stubs(:new)
+    
     @portfolio = JewelryPortfolio.new('alloy')
   end
   

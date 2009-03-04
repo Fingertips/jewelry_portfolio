@@ -3,7 +3,7 @@ require 'jewelry_portfolio/repos_index'
 require 'jewelry_portfolio/template'
 
 class JewelryPortfolio
-  attr_reader :account, :repo, :index, :template
+  attr_reader :account, :repo, :index, :html_template, :feed_template
   
   # Initializes a JewelryPortfolio instance for the specified +account+.
   #
@@ -15,18 +15,20 @@ class JewelryPortfolio
     raise ArgumentError, "No `account' given." unless account
     raise ArgumentError, "No valid `repo' given." if repo && !repo.valid?
     
-    @account  = account
-    @repo     = repo
-    @index    = ReposIndex.new(@account, (Dir.pwd unless @repo))
-    @template = Template::HTML.new(File.join(@index.path, 'template.html.erb'), @index.repos)
+    @account = account
+    @repo    = repo
+    @index   = ReposIndex.new(@account, (Dir.pwd unless @repo))
+    
+    @html_template = template(Template::HTML, 'template.html.erb')
+    @feed_template = template(Template::Feed, 'feed.xml.builder')
     
     @index.add(@repo) if @repo
   end
   
   # Renders the index.html file.
   def render!
-    puts "Generating html"
-    File.open(File.join(@index.path, 'index.html'), 'w') { |f| f << @template.render }
+    write_out('HTML', 'index.html', @html_template.render)
+    write_out('feed', 'feed.xml', @feed_template.render)
   end
   
   # Renders the index.html file, then commits and pushes it to the remote.
@@ -37,6 +39,15 @@ class JewelryPortfolio
   end
   
   private
+  
+  def template(klass, file)
+    klass.new(File.join(@index.path, file), @index.repos)
+  end
+  
+  def write_out(message, file, data)
+    puts "Generating #{message}"
+    File.open(File.join(@index.path, file), 'w') { |f| f << data }
+  end
   
   def commit_message
     if @repo
