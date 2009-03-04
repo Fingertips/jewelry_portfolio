@@ -1,5 +1,8 @@
 <html>
   <body>
-<%= repos.map { |repo| repo_partial(repo) }.join("\n") %>
+    <% repos.each do |repo| %>
+      <h1><%= repo.name %></h1>
+      <p><%= repo.description %></p>
+    <% end %>
   </body>
 </html>

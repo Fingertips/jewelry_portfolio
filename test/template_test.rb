@@ -40,29 +40,6 @@ describe "JewelryPortfolio::Template" do
     @page.render.should == @repos.inspect
   end
   
-  it "should render an ERB partial with the specified local variables" do
-    @page.partial('repo', :repo => @repos.first).should ==
-      File.read(fixture('dr-nic-magic-awesome.html'))
-  end
-  
-  it "should render an ERB partial with the specified repo and make its spec available" do
-    @page.repo_partial(@repos.first).should ==
-      File.read(fixture('dr-nic-magic-awesome.html'))
-  end
-  
-  it "should render an ERB partial with the specified repo and local variables" do
-    File.stubs(:read).returns('<%= "#{repo.name} #{extra_var}" %>')
-    @page.repo_partial(@repos.first, :extra_var => 'extra_var_value').should == "#{@repos.first.name} extra_var_value"
-  end
-  
-  it "should render an ERB partial with nested partials" do
-    stubs_file_exists_and_returns('parent.html.erb', 'Hello <%= partial "nested1", :text => "world!" %>')
-    stubs_file_exists_and_returns('nested1.html.erb', '<%= text %> <%= partial "nested2", :text => "Wazzup?!" %>')
-    stubs_file_exists_and_returns('nested2.html.erb', '<%= text %>')
-    
-    @page.partial('parent').should == 'Hello world! Wazzup?!'
-  end
-  
   it "should render the ERB template" do
     @page.render.should == File.read(fixture('template.html'))
   end

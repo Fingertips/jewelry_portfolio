@@ -26,34 +26,6 @@ class JewelryPortfolio
       erb @template, binding
     end
     
-    # Renders a partial specified by +partial_name+ minus the extension. You
-    # can optionally specify a hash of +local_variables+ which will be
-    # available while rendering the partial.
-    #
-    # Consider a partial named <tt>foo.html.erb</tt>, in the same directory as
-    # the template, containing the following:
-    #
-    #   Text: <%= text %>
-    #
-    # This partial can now be rendered like this:
-    #
-    #   partial('foo', :text => 'bar') # => "Text: bar"
-    def partial(partial_name, local_variables = {})
-      for (var_name, var_value) in local_variables
-        eval "#{var_name} = var_value"
-      end
-      erb html_template_file(partial_name), binding
-    end
-    
-    # Renders a partial for the specified +repo+. This method looks for a
-    # partial file named <tt>repo.html.erb</tt> in the same directory as the
-    # template.
-    #
-    # See partial for more info.
-    def repo_partial(repo, local_variables = {})
-      partial 'repo', local_variables.merge(:repo => repo)
-    end
-    
     private
     
     def erb(file, binding)
