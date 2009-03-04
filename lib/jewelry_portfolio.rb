@@ -3,8 +3,6 @@ require 'jewelry_portfolio/repos_index'
 require 'jewelry_portfolio/template'
 
 class JewelryPortfolio
-  class FileMissingError < StandardError; end
-  
   attr_reader :account, :repo, :index, :template
   
   # Initializes a JewelryPortfolio instance for the specified +account+.
@@ -20,7 +18,7 @@ class JewelryPortfolio
     @account  = account
     @repo     = repo
     @index    = ReposIndex.new(@account, (Dir.pwd unless @repo))
-    @template = Template.new(File.join(@index.path, 'template'), @index.repos)
+    @template = Template::HTML.new(File.join(@index.path, 'template.html.erb'), @index.repos)
     
     @index.add(@repo) if @repo
   end

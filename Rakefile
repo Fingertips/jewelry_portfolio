@@ -18,6 +18,7 @@ begin
       good to you, you're in luck. Because that's exactly what this gem does.
     }
     
+    s.add_dependency('builder', '>= 0')
     s.add_dependency('schacon-git', '>= 0')
   end
   

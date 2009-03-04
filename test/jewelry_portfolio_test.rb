@@ -44,8 +44,8 @@ describe "JewelryPortfolio" do
   
   it "should return the template" do
     template = @portfolio.template
-    template.should.be.instance_of JewelryPortfolio::Template
-    template.template.should == File.join(@portfolio.index.path, 'template.html.erb')
+    template.should.be.instance_of JewelryPortfolio::Template::HTML
+    template.file.should == File.join(@portfolio.index.path, 'template.html.erb')
     template.repos.should == @portfolio.index.repos.to_a
   end
   
@@ -66,7 +66,7 @@ end
 describe "JewelryPortfolio, with a custom work_directory" do
   before do
     JewelryPortfolio::ReposIndex.any_instance.stubs(:load_pages_repo!)
-    JewelryPortfolio::Template.stubs(:new)
+    JewelryPortfolio::Template::HTML.stubs(:new)
     @portfolio = JewelryPortfolio.new('alloy')
   end
   
