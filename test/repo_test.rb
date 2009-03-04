@@ -50,10 +50,11 @@ module SharedRepoSpecs
       it "should return itself serialized as YAML" do
         loaded_repo = YAML.load(@repo.to_yaml)
         
-        loaded_repo.name.should == @repo.name
-        loaded_repo.version.should == @repo.version
-        loaded_repo.summary.should == @repo.summary
+        loaded_repo.name.should        == @repo.name
+        loaded_repo.version.should     == @repo.version
+        loaded_repo.summary.should     == @repo.summary
         loaded_repo.description.should == @repo.description
+        loaded_repo.updated_at.should  == @repo.updated_at
       end
       
       it "should be valid with all necessary attributes set" do
@@ -74,6 +75,9 @@ end
 
 describe "JewelryPortfolio::Repo, when initialized without a gemspec" do
   before do
+    @time = Time.now
+    Time.stubs(:now).returns(@time)
+    
     @repo = JewelryPortfolio::Repo.new
     @repo.account = 'alloy'
     @repo.name = 'dr-nic-magic-awesome'
@@ -87,6 +91,11 @@ describe "JewelryPortfolio::Repo, when initialized without a gemspec" do
   it "should return that there's _no_ a gem for the repo" do
     @repo.gem?.should.be false
   end
+  
+  it "should return a new updated_at Time instance if there was no updated_at yet" do
+    @repo.updated_at.should == @time
+    @repo.instance_variable_get("@updated_at").should == @time
+  end
 end
 
 describe "JewelryPortfolio::Repo, when initialized with a gemspec" do
@@ -96,6 +105,10 @@ describe "JewelryPortfolio::Repo, when initialized with a gemspec" do
   end
   
   include SharedRepoSpecs
+  
+  it "should return the date from the gemspec" do
+    @repo.updated_at.should == Time.utc(@spec.date.year, @spec.date.month, @spec.date.day)
+  end
   
   it "should return that there's a gem for the repo" do
     @repo.gem?.should.be true
@@ -107,5 +120,17 @@ describe "JewelryPortfolio::Repo, when initialized with a gemspec" do
   
   it "should return the gem install command" do
     @repo.gem_install_command.should == "sudo gem install #{@repo.gem_name} -s http://gems.github.com"
+  end
+end
+
+describe "JewelryPortfolio::Repo, when initialized from YAML" do
+  before do
+    @repo = YAML.load(fixture_read('repos.yml')).first
+  end
+  
+  include SharedRepoSpecs
+  
+  it "should return the date as it was serialized in the yaml" do
+    YAML.load(@repo.to_yaml).updated_at.should == @repo.updated_at
   end
 end

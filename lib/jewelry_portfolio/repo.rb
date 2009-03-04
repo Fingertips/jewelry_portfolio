@@ -25,13 +25,21 @@ class JewelryPortfolio
     # Not needed when initialized with a Gem::Specification.
     attr_accessor :description
     
+    # The Time at which this Repo was last updated.
+    attr_reader :updated_at
+    
     def initialize(account = nil, spec = nil)
       @account = account
       @gem = !spec.nil?
       
-      %w{ name version summary description }.each do |attr|
-        send("#{attr}=", spec.send(attr).to_s)
-      end if spec
+      if spec
+        @updated_at = Time.utc(spec.date.year, spec.date.month, spec.date.day)
+        %w{ name version summary description }.each do |attr|
+          send("#{attr}=", spec.send(attr).to_s)
+        end
+      end
+      
+      @updated_at = Time.now unless @updated_at
     end
     
     # Returns whether or not there's a Ruby gem for this repo.

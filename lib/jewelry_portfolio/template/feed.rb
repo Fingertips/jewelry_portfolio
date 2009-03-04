@@ -15,7 +15,7 @@ class JewelryPortfolio
         @xml.instruct!
         @xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
           @xml.id      "http://fingertips.github.com"
-          @xml.link    :rel => "self", :href => "http://fingertips.github.com"
+          @xml.link    "rel" => "self", "href" => "http://fingertips.github.com"
           @xml.updated Time.now.iso8601
           @xml.author  { @xml.name "Fingertips" }
           
