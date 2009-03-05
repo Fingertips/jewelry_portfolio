@@ -34,7 +34,7 @@ describe "JewelryPortfolio::Template::HTML" do
     @repos = %w{ dr-nic-magic-awesome.gemspec_ microgem.gemspec_ }.
       map { |spec| JewelryPortfolio::Repo.new('alloy', fixture_eval(spec)) }
     
-    @file = fixture('template.html.erb')
+    @file = fixture('index.erb')
     @template = JewelryPortfolio::Template::HTML.new(@file, 'alloy', @repos.to_set)
   end
   
@@ -46,7 +46,7 @@ describe "JewelryPortfolio::Template::HTML" do
   end
   
   it "should render the ERB template" do
-    @template.render.should == File.read(fixture('template.html'))
+    @template.render.should == File.read(fixture('index.html'))
   end
   
   it "should return the repos ordered by name" do

@@ -45,7 +45,7 @@ describe "JewelryPortfolio" do
   it "should return the html template" do
     template = @portfolio.html_template
     template.should.be.instance_of JewelryPortfolio::Template::HTML
-    template.file.should == File.join(@portfolio.index.path, 'template.html.erb')
+    template.file.should == File.join(@portfolio.index.path, 'index.erb')
     template.account.should == 'alloy'
     template.repos.should == @portfolio.index.repos.to_a.sort_by { |r| r.name }
   end
@@ -64,7 +64,7 @@ describe "JewelryPortfolio" do
     expected_feed = File.read(fixture('feed_with_options.xml')).gsub('TIME_NOW', time.iso8601)
     
     @portfolio.render!
-    File.read(File.join(@portfolio.index.path, 'index.html')).should == File.read(fixture('template.html'))
+    File.read(File.join(@portfolio.index.path, 'index.html')).should == File.read(fixture('index.html'))
     File.read(File.join(@portfolio.index.path, 'feed.xml')).should == expected_feed
   end
   

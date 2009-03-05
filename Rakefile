@@ -57,5 +57,9 @@ task :generate_repo_fixture_archive do
   archive = "#{repo}.tgz"
   
   rm_rf File.join(fixtures, archive)
+  
+  sh "cd '#{File.join(fixtures, repo)}' && git add . && git commit -a -m 'Regenerating repo fixture'"
   sh "cd '#{fixtures}' && tar czf #{archive} #{repo}"
+  
+  rm_rf 'test/tmp'
 end
