@@ -53,7 +53,7 @@ describe "JewelryPortfolio" do
   it "should return the feed template" do
     template = @portfolio.feed_template
     template.should.be.instance_of JewelryPortfolio::Template::Feed
-    template.file.should == File.join(@portfolio.index.path, 'feed.xml.builder')
+    template.file.should == File.join(@portfolio.index.path, 'feed.rb')
     template.account.should == 'alloy'
     template.repos.should == @portfolio.index.repos.to_a.sort
   end
@@ -61,7 +61,7 @@ describe "JewelryPortfolio" do
   it "should write out the template and feed" do
     time = Time.now
     Time.stubs(:now).returns(time)
-    expected_feed = File.read(fixture('feed.xml')).gsub('TIME_NOW', time.iso8601)
+    expected_feed = File.read(fixture('feed_with_options.xml')).gsub('TIME_NOW', time.iso8601)
     
     @portfolio.render!
     File.read(File.join(@portfolio.index.path, 'index.html')).should == File.read(fixture('template.html'))

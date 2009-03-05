@@ -54,12 +54,12 @@ describe "JewelryPortfolio::Template::HTML" do
   end
 end
 
-describe "JewelryPortfolio::Template::Feed" do
+describe "JewelryPortfolio::Template::Feed, in general" do
   before do
     @repos = %w{ dr-nic-magic-awesome.gemspec_ microgem.gemspec_ }.
       map { |spec| JewelryPortfolio::Repo.new('alloy', fixture_eval(spec)) }
     
-    @file = fixture('feed.xml.builder')
+    @file = fixture('feed_with_defaults.rb')
     @template = JewelryPortfolio::Template::Feed.new(@file, 'alloy', @repos.to_set)
   end
   
@@ -71,14 +71,6 @@ describe "JewelryPortfolio::Template::Feed" do
   
   it "should return the feed url" do
     @template.feed_url.should == 'http://alloy.github.com/feed.xml'
-  end
-  
-  it "should render the Builder template" do
-    time = Time.now
-    Time.stubs(:now).returns(time)
-    expected = File.read(fixture('feed.xml')).gsub('TIME_NOW', time.iso8601)
-    
-    @template.render.should == expected
   end
   
   it "should return the repos ordered by updated_at" do
@@ -101,5 +93,67 @@ describe "JewelryPortfolio::Template::Feed" do
     repos.last.version = '1.2.3'
     
     @template.repos.should == @repos.sort
+  end
+end
+
+describe "JewelryPortfolio::Template::Feed, with defaults" do
+  before do
+    @repos = %w{ dr-nic-magic-awesome.gemspec_ microgem.gemspec_ }.
+      map { |spec| JewelryPortfolio::Repo.new('alloy', fixture_eval(spec)) }
+    
+    @file = fixture('feed_with_defaults.rb')
+    @template = JewelryPortfolio::Template::Feed.new(@file, 'alloy', @repos.to_set)
+  end
+  
+  it "should return the title" do
+    @template.title.should == 'Code from alloy'
+  end
+  
+  it "should return the description" do
+    @template.description.should == 'The Ruby libraries, from alloy, available as open-source projects'
+  end
+  
+  it "should return the default `entry' proc which is used to render an entry for each repo" do
+    @template.entry.should.be JewelryPortfolio::Template::Feed::DEFAULT_ENTRY_PROC
+  end
+  
+  it "should render the template" do
+    time = Time.now
+    Time.stubs(:now).returns(time)
+    expected = File.read(fixture('feed_with_defaults.xml')).gsub('TIME_NOW', time.iso8601)
+    
+    @template.render.should == expected
+  end
+end
+
+describe "JewelryPortfolio::Template::Feed, with overriden options from the template" do
+  before do
+    @repos = %w{ dr-nic-magic-awesome.gemspec_ microgem.gemspec_ }.
+      map { |spec| JewelryPortfolio::Repo.new('alloy', fixture_eval(spec)) }
+    
+    @file = fixture('feed_with_options.rb')
+    @template = JewelryPortfolio::Template::Feed.new(@file, 'alloy', @repos.to_set)
+  end
+  
+  include SharedTemplateSpecs
+  
+  it "should return the title that was overriden" do
+    title = 'Code from Eloy Duran (alloy)'
+    @template.title = title
+    @template.title.should == title
+  end
+  
+  it "should return the description that was overriden" do
+    description = 'The Ruby libraries, from Eloy Duran, available as open-source projects'
+    @template.description = description
+    @template.description.should == description
+  end
+  
+  it "should render the template" do
+    time = Time.now
+    Time.stubs(:now).returns(time)
+    expected = File.read(fixture('feed_with_options.xml')).gsub('TIME_NOW', time.iso8601)
+    
+    @template.render.should == expected
   end
 end

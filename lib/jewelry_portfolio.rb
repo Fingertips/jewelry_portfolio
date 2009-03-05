@@ -20,7 +20,7 @@ class JewelryPortfolio
     @index   = ReposIndex.new(@account, (Dir.pwd unless @repo))
     
     @html_template = template(Template::HTML, 'template.html.erb')
-    @feed_template = template(Template::Feed, 'feed.xml.builder')
+    @feed_template = template(Template::Feed, 'feed.rb')
     
     @index.add(@repo) if @repo
   end
