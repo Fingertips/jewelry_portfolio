@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>http://alloy.github.com/</id>
+  <link href="http://alloy.github.com/feed.xml" rel="self"/>
+  <updated>TIME_NOW</updated>
+  <author>
+    <name>alloy</name>
+  </author>
+  <title>Code from Eloy Duran (alloy)</title>
+  <subtitle>The Ruby libraries, from Eloy Duran, available as open-source projects</subtitle>
+  <entry>
+    <id>http://github.com/alloy/microgem/tree/master#0.2.0</id>
+    <updated>2009-03-04T00:00:00Z</updated>
+    <title>Microgem 0.2.0</title>
+    <link href="http://github.com/alloy/microgem/tree/master"/>
+    <summary>MicroGem provides a simple naive replacement for the `gem install' command in the form of the `mgem' commandline utility.</summary>
+    <content>MicroGem provides a simple naive replacement for the `gem install' command in the form of the `mgem' commandline utility.</content>
+  </entry>
+  <entry>
+    <id>http://github.com/alloy/dr-nic-magic-awesome/tree/master#1.0.0</id>
+    <updated>2009-03-04T00:00:00Z</updated>
+    <title>Dr-nic-magic-awesome 1.0.0</title>
+    <link href="http://github.com/alloy/dr-nic-magic-awesome/tree/master"/>
+    <summary>Magically fix your projects overnight!</summary>
+    <content>A gem which summons Dr. Nic to fix all your projects while you are cuddled underneath your blankie.</content>
+  </entry>
+</feed>
