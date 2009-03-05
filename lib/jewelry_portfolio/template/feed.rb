@@ -5,17 +5,6 @@ class JewelryPortfolio
   class Template
     # This class is responsible for rendering a HTML template.
     class Feed < Template
-      DEFAULT_ENTRY_PROC = lambda do |xml, repo|
-        xml.entry do
-          xml.id      "#{repo.url}##{repo.version}"
-          xml.updated repo.updated_at.iso8601
-          xml.title   "#{repo.name} #{repo.version}"
-          xml.link    :href => repo.url
-          xml.summary repo.summary
-          xml.content repo.description
-        end
-      end
-      
       # The title that should be used for the feed.
       #
       # This defaults to <tt>"Code from #{@account}"</tt>.
@@ -27,19 +16,19 @@ class JewelryPortfolio
       # as open-source projects"</tt>.
       attr_accessor :description
       
-      # The proc that is used to render an entry in the feed for each repo. The
-      # proc gets 2 arguments; the Builder::XmlMarkup instance and the
-      # JewelryPortfolio::Repo instance to render the entry for.
-      #
-      # This defaults to DEFAULT_ENTRY_PROC.
-      attr_accessor :entry
-      
       def initialize(template_file, account, repos)
         super
-        @entry = DEFAULT_ENTRY_PROC
         @title = "Code from #{@account}"
         @description = "The Ruby libraries, from #{@account}, available as open-source projects"
         load_template!
+      end
+      
+      # Loads the template. A local variable named `feed' is made available,
+      # which holds a reference to this JewelryPortfolio::Template::Feed
+      # instance.
+      def load_template!
+        feed = self
+        eval(File.read(@file))
       end
       
       # Returns the repos ordered by +updated_at+ then +version+.
@@ -59,6 +48,36 @@ class JewelryPortfolio
         "http://#{@account}.github.com/feed.xml"
       end
       
+      # Returns the +id+ attribute to be used for the repo.
+      def id_for_repo(repo)
+        "#{repo.url}##{repo.version}"
+      end
+      
+      # Returns the +updated+ attribute to be used for the repo.
+      def updated_for_repo(repo)
+        repo.updated_at.iso8601
+      end
+      
+      # Returns the +title+ attribute to be used for the repo.
+      def title_for_repo(repo)
+        "#{repo.name} #{repo.version}"
+      end
+      
+      # Returns the +link+ attribute to be used for the repo.
+      def link_for_repo(repo)
+        repo.url
+      end
+      
+      # Returns the +summary+ attribute to be used for the repo.
+      def summary_for_repo(repo)
+        repo.summary
+      end
+      
+      # Returns the +description+ attribute to be used for the repo.
+      def description_for_repo(repo)
+        repo.description
+      end
+      
       # Renders the HTML and returns the output.
       def render(&block)
         output = ''
@@ -75,17 +94,16 @@ class JewelryPortfolio
           xml.subtitle @description
           
           repos.each do |repo|
-            @entry.call(xml, repo)
+            xml.entry do
+              xml.id      id_for_repo(repo)
+              xml.updated updated_for_repo(repo)
+              xml.title   title_for_repo(repo)
+              xml.link    :href => link_for_repo(repo)
+              xml.summary summary_for_repo(repo)
+              xml.content description_for_repo(repo)
+            end
           end
         end
-      end
-      
-      # Loads the template. A local variable named `feed' is made available,
-      # which holds a reference to this JewelryPortfolio::Template::Feed
-      # instance.
-      def load_template!
-        feed = self
-        eval(File.read(@file))
       end
     end
   end

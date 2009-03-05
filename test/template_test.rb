@@ -100,6 +100,7 @@ describe "JewelryPortfolio::Template::Feed, with defaults" do
   before do
     @repos = %w{ dr-nic-magic-awesome.gemspec_ microgem.gemspec_ }.
       map { |spec| JewelryPortfolio::Repo.new('alloy', fixture_eval(spec)) }
+    @repo = @repos.first
     
     @file = fixture('feed_with_defaults.rb')
     @template = JewelryPortfolio::Template::Feed.new(@file, 'alloy', @repos.to_set)
@@ -113,8 +114,28 @@ describe "JewelryPortfolio::Template::Feed, with defaults" do
     @template.description.should == 'The Ruby libraries, from alloy, available as open-source projects'
   end
   
-  it "should return the default `entry' proc which is used to render an entry for each repo" do
-    @template.entry.should.be JewelryPortfolio::Template::Feed::DEFAULT_ENTRY_PROC
+  it "should return the `id' attribute for a repo" do
+    @template.id_for_repo(@repo).should == "#{@repo.url}##{@repo.version}"
+  end
+  
+  it "should return the `updated' attribute for a repo" do
+    @template.updated_for_repo(@repo).should == @repo.updated_at.iso8601
+  end
+  
+  it "should return the `title' attribute for a repo" do
+    @template.title_for_repo(@repo).should == "#{@repo.name} #{@repo.version}"
+  end
+  
+  it "should return the `link' attribute for a repo" do
+    @template.link_for_repo(@repo).should == @repo.url
+  end
+  
+  it "should return the `summary' attribute for a repo" do
+    @template.summary_for_repo(@repo).should == @repo.summary
+  end
+  
+  it "should return the `description' attribute for a repo" do
+    @template.description_for_repo(@repo).should == @repo.description
   end
   
   it "should render the template" do
@@ -130,6 +151,7 @@ describe "JewelryPortfolio::Template::Feed, with overriden options from the temp
   before do
     @repos = %w{ dr-nic-magic-awesome.gemspec_ microgem.gemspec_ }.
       map { |spec| JewelryPortfolio::Repo.new('alloy', fixture_eval(spec)) }
+    @repo = @repos.first
     
     @file = fixture('feed_with_options.rb')
     @template = JewelryPortfolio::Template::Feed.new(@file, 'alloy', @repos.to_set)
@@ -147,6 +169,30 @@ describe "JewelryPortfolio::Template::Feed, with overriden options from the temp
     description = 'The Ruby libraries, from Eloy Duran, available as open-source projects'
     @template.description = description
     @template.description.should == description
+  end
+  
+  it "should return the `id' attribute for a repo" do
+    @template.id_for_repo(@repo).should == "#{@repo.name}-#{@repo.version}"
+  end
+  
+  it "should return the `updated' attribute for a repo" do
+    @template.updated_for_repo(@repo).should == 'Right about NOW!'
+  end
+  
+  it "should return the `title' attribute for a repo" do
+    @template.title_for_repo(@repo).should == "#{@repo.name.capitalize} (#{@repo.version})"
+  end
+  
+  it "should return the `link' attribute for a repo" do
+    @template.link_for_repo(@repo).should == "http://google.com?q=#{@repo.name}"
+  end
+  
+  it "should return the `summary' attribute for a repo" do
+    @template.summary_for_repo(@repo).should == "#{@repo.name.capitalize} is awesome!"
+  end
+  
+  it "should return the `description' attribute for a repo" do
+    @template.description_for_repo(@repo).should == "#{@repo.name.capitalize} is awesome!"
   end
   
   it "should render the template" do
