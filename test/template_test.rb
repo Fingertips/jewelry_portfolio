@@ -69,6 +69,11 @@ describe "JewelryPortfolio::Template::Feed, in general" do
     @template.feed_id.should == 'http://alloy.github.com/'
   end
   
+  it "should return the feed id with all lower case characters" do
+    @template.instance_variable_set("@account", 'Fingertips')
+    @template.feed_id.should == 'http://fingertips.github.com/'
+  end
+  
   it "should return the feed url" do
     @template.feed_url.should == 'http://alloy.github.com/feed.xml'
   end

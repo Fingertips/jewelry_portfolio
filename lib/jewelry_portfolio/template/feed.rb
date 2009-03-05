@@ -40,7 +40,7 @@ class JewelryPortfolio
       
       # Returns the +id+ to be used for the feed.
       def feed_id
-        "http://#{@account}.github.com/"
+        "http://#{@account.downcase}.github.com/"
       end
       
       # Returns the URL to the feed.
