@@ -73,7 +73,7 @@ describe "JewelryPortfolio::Template::Feed" do
     @template.feed_url.should == 'http://alloy.github.com/feed.xml'
   end
   
-  xit "should render the Builder template" do
+  it "should render the Builder template" do
     time = Time.now
     Time.stubs(:now).returns(time)
     expected = File.read(fixture('feed.xml')).gsub('TIME_NOW', time.iso8601)
