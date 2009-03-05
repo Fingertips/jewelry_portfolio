@@ -3,7 +3,20 @@ require "rss"
 
 class JewelryPortfolio
   class Template
-    # This class is responsible for rendering a HTML template.
+    # This class is responsible for rendering an Atom RSS feed template.
+    #
+    # To override the title or description of the feed in your template:
+    #
+    #   feed.title = 'Code from alloy'
+    #   feed.description = 'The Ruby libraries, from alloy, available as open-source projects'
+    #
+    # To override any of the attributes generated for each repo, override the
+    # methods: id_for_repo, updated_for_repo, title_for_repo, link_for_repo,
+    # summary_for_repo, and description_for_repo:
+    #
+    #   def feed.title_for_repo(repo)
+    #     "#{repo.name.capitalize} (#{repo.version})"
+    #   end
     class Feed < Template
       # The title that should be used for the feed.
       #
