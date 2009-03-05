@@ -46,6 +46,7 @@ describe "JewelryPortfolio" do
     template = @portfolio.html_template
     template.should.be.instance_of JewelryPortfolio::Template::HTML
     template.file.should == File.join(@portfolio.index.path, 'template.html.erb')
+    template.account.should == 'alloy'
     template.repos.should == @portfolio.index.repos.to_a.sort_by { |r| r.name }
   end
   
@@ -53,6 +54,7 @@ describe "JewelryPortfolio" do
     template = @portfolio.feed_template
     template.should.be.instance_of JewelryPortfolio::Template::Feed
     template.file.should == File.join(@portfolio.index.path, 'feed.xml.builder')
+    template.account.should == 'alloy'
     template.repos.should == @portfolio.index.repos.to_a.sort
   end
   

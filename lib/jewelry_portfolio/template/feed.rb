@@ -30,10 +30,10 @@ class JewelryPortfolio
         @xml = Builder::XmlMarkup.new(:target => output, :indent => 2)
         @xml.instruct!
         @xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
-          @xml.id      "http://fingertips.github.com"
-          @xml.link    "rel" => "self", "href" => "http://fingertips.github.com"
+          @xml.id      feed_id
+          @xml.link    "rel" => "self", "href" => feed_url
           @xml.updated Time.now.iso8601
-          @xml.author  { @xml.name "Fingertips" }
+          @xml.author  { @xml.name @account }
           
           @xml.title    "Code from Fingertips"
           @xml.subtitle "The Ruby libraries we have available as open-source projects"

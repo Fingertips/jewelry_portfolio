@@ -2,6 +2,8 @@ Gem::Specification.new do |spec|
   spec.name = 'microgem'
   spec.version = '0.2.0'
   
+  spec.date = Date.parse('2009-03-04')
+  
   spec.author = 'Eloy Duran'
   spec.email = 'eloy.de.enige@gmail.com'
   

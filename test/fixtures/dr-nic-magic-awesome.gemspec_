@@ -2,6 +2,8 @@ Gem::Specification.new do |spec|
   spec.name = 'dr-nic-magic-awesome'
   spec.version = '1.0.0'
   
+  spec.date = Date.parse('2009-03-04')
+  
   spec.author = 'John Barnette'
   spec.email = 'jbarnette@example.com'
   
