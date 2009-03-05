@@ -10,7 +10,7 @@ module SharedTemplateSpecs
       it "should raise a JewelryPortfolio::FileMissingError if the specified template does not exist" do
         e = nil
         begin
-          JewelryPortfolio::Template.new('/not/existing', @repos)
+          JewelryPortfolio::Template.new('/not/existing', 'alloy', @repos)
         rescue JewelryPortfolio::Template::FileMissingError => e
         end
         
@@ -35,7 +35,7 @@ describe "JewelryPortfolio::Template::HTML" do
       map { |spec| JewelryPortfolio::Repo.new('alloy', fixture_eval(spec)) }
     
     @file = fixture('template.html.erb')
-    @template = JewelryPortfolio::Template::HTML.new(@file, @repos.to_set)
+    @template = JewelryPortfolio::Template::HTML.new(@file, 'alloy', @repos.to_set)
   end
   
   include SharedTemplateSpecs
@@ -60,12 +60,20 @@ describe "JewelryPortfolio::Template::Feed" do
       map { |spec| JewelryPortfolio::Repo.new('alloy', fixture_eval(spec)) }
     
     @file = fixture('feed.xml.builder')
-    @template = JewelryPortfolio::Template::Feed.new(@file, @repos.to_set)
+    @template = JewelryPortfolio::Template::Feed.new(@file, 'alloy', @repos.to_set)
   end
   
   include SharedTemplateSpecs
   
-  it "should render the Builder template" do
+  it "should return the feed id" do
+    @template.feed_id.should == 'http://alloy.github.com/'
+  end
+  
+  it "should return the feed url" do
+    @template.feed_url.should == 'http://alloy.github.com/feed.xml'
+  end
+  
+  xit "should render the Builder template" do
     time = Time.now
     Time.stubs(:now).returns(time)
     expected = File.read(fixture('feed.xml')).gsub('TIME_NOW', time.iso8601)

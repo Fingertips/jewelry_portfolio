@@ -41,7 +41,7 @@ class JewelryPortfolio
   private
   
   def template(klass, file)
-    klass.new(File.join(@index.path, file), @index.repos)
+    klass.new(File.join(@index.path, file), @account, @index.repos)
   end
   
   def write_out(message, file, data)

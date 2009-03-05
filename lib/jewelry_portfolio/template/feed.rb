@@ -15,6 +15,14 @@ class JewelryPortfolio
         super.sort
       end
       
+      def feed_id
+        "http://#{@account}.github.com/"
+      end
+      
+      def feed_url
+        "http://#{@account}.github.com/feed.xml"
+      end
+      
       # Renders the HTML and returns the output.
       def render(&block)
         output = ''
