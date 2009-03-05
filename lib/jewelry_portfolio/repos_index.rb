@@ -43,7 +43,7 @@ class JewelryPortfolio
     end
     
     def add(repo)
-      @repos = Set.new([repo]).merge(@repos)
+      @repos = Set.new([repo]).merge(repos)
       update_repos_file!
     end
     

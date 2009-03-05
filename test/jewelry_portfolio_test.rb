@@ -7,7 +7,7 @@ describe "JewelryPortfolio" do
     JewelryPortfolio::ReposIndex.any_instance.stubs(:puts)
     FileUtils.rm_rf(TMP_PAGES_REPO)
     
-    @repo = JewelryPortfolio::Repo.new('alloy', eval(fixture_read('dr-nic-magic-awesome.gemspec_')))
+    @repo = JewelryPortfolio::Repo.new('alloy', eval(fixture_read('dr-nic-magic-awesome.gemspec_').gsub('1.0.0', '1.1.1')))
     @portfolio = JewelryPortfolio.new('alloy', @repo)
     
     @portfolio.stubs(:puts)
@@ -58,19 +58,23 @@ describe "JewelryPortfolio" do
     template.repos.should == @portfolio.index.repos.to_a.sort
   end
   
-  it "should write out the template and feed" do
+  it "should write out the template and feed files with the new repo" do
     time = Time.now
     Time.stubs(:now).returns(time)
     expected_feed = File.read(fixture('feed_with_options.xml')).gsub('TIME_NOW', time.iso8601)
     
     @portfolio.render!
-    File.read(File.join(@portfolio.index.path, 'index.html')).should == File.read(fixture('index.html'))
-    File.read(File.join(@portfolio.index.path, 'feed.xml')).should == expected_feed
+    
+    rendered_html = File.read(File.join(@portfolio.index.path, 'index.html')).gsub('1.1.1', '1.0.0')
+    rendered_feed = File.read(File.join(@portfolio.index.path, 'feed.xml')).gsub('1.1.1', '1.0.0')
+    
+    rendered_html.should == File.read(fixture('index.html'))
+    rendered_feed.should == expected_feed
   end
   
   it "should render, commit, and push the master branch" do
     @portfolio.expects(:render!)
-    @portfolio.index.expects(:commit!).with("Updated github pages for: dr-nic-magic-awesome-1.0.0")
+    @portfolio.index.expects(:commit!).with("Updated github pages for: dr-nic-magic-awesome-1.1.1")
     @portfolio.index.expects(:push!)
     
     @portfolio.release!
